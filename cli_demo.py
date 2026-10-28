@@ -142,13 +142,13 @@ def demo_mitigations():
 def main():
     print_banner()
     while True:
-        print("\nChoose an option:")
-        print("  1. Run Controlled Padding Oracle Attack")
-        print("  2. Demonstrate CBC Bit-Flipping Malleability")
-        print("  3. Compare Defenses & Mitigations")
-        print("  4. Run Full Automated Test Suite")
+        print("\nSelect Analytical Module:")
+        print("  1. Execute Controlled Differential Padding-Oracle Attack")
+        print("  2. Evaluate CBC Non-Malleability Failure (Bit-Flipping Transformation)")
+        print("  3. Comparative Defense & Mitigation Analysis (Uniform vs EtM vs AES-GCM)")
+        print("  4. Execute Automated Formal Security Verification Suite")
         print("  5. Exit")
-        choice = input("\nEnter choice (1-5): ").strip()
+        choice = input("\nEnter selection (1-5): ").strip()
 
         if choice == "1":
             demo_oracle_attack()

@@ -166,19 +166,19 @@ Summary: 7/7 tests passed in 118.17 ms.
 
 ---
 
-## 8. Viva-Voce Questions & Model Answers
+## 8. Critical Architectural Defense Analysis & Cryptographic Invariants
 
-### Question 1: What is a Decryption Oracle, and how does it create a side-channel vulnerability?
-**Answer**: A Decryption Oracle is any system or server endpoint that accepts ciphertext, attempts decryption, and returns feedback (status code, error message, or processing delay) indicating whether the decrypted payload satisfied structural validation (such as PKCS#7 padding). It creates a side-channel vulnerability because this single bit of information ("valid" vs "invalid") acts as an algebraic equation, enabling an attacker to solve for intermediate state bytes without knowing the private decryption key.
+### 8.1 Decryption Oracle Mechanics & Side-Channel Information Leakage
+**Analysis**: A Decryption Oracle is any system or server endpoint that accepts ciphertext, attempts decryption, and returns feedback (status code, error message, or processing delay) indicating whether the decrypted payload satisfied structural validation (such as PKCS#7 padding). It creates a side-channel vulnerability because this single bit of information ("valid" vs "invalid") acts as an algebraic equation, enabling an attacker to solve for intermediate state bytes without knowing the private decryption key.
 
-### Question 2: Why can we decrypt ciphertext from right to left (byte 15 to 0), but not from left to right?
-**Answer**: PKCS#7 padding is strictly located at the end (tail) of the block. By controlling byte 15, we can set target padding `0x01` which only requires byte 15 to be correct. Once byte 15's intermediate value $I[15]$ is known, we can force byte 15 to decrypt to `0x02`, which allows us to probe candidate values for byte 14 to satisfy the two-byte padding `0x02 0x02`. Left-to-right probing cannot leverage PKCS#7 formatting because padding rules apply strictly to the trailing bytes.
+### 8.2 Asymmetry of Directional Byte Probing (Right-to-Left Traversal Invariant)
+**Analysis**: PKCS#7 padding is strictly located at the trailing boundary (tail) of the block. By controlling byte 15, an adversary sets target padding `0x01` which only requires byte 15 to be correct. Once byte 15's intermediate value $I[15]$ is established, byte 15 can be forced to decrypt to `0x02`, allowing systematic probing for candidate values at byte 14 to satisfy the two-byte padding `0x02 0x02`. Left-to-right probing cannot leverage PKCS#7 formatting because padding rules apply strictly to trailing bytes.
 
-### Question 3: Why does Encrypt-then-MAC (EtM) prevent the padding oracle attack, while MAC-then-Encrypt (MtE) historically failed?
-**Answer**: In Encrypt-then-MAC, the MAC covers the ciphertext ($IV \parallel C$). The receiver verifies the MAC in constant time **before** initiating decryption or padding validation. Any forged or modified ciphertext is dropped immediately. In MAC-then-Encrypt (used in older TLS versions), the receiver must decrypt and unpad the ciphertext **before** it can verify the MAC. Any error thrown during unpadding leaks the padding oracle before the MAC can be validated!
+### 8.3 Compositional Security: Encrypt-then-MAC (EtM) vs. MAC-then-Encrypt (MtE)
+**Analysis**: In Encrypt-then-MAC, the MAC covers the complete ciphertext ($IV \parallel C$). The receiver verifies the MAC in constant time **before** initiating decryption or padding validation. Any forged or modified ciphertext is dropped immediately. In MAC-then-Encrypt (used in older TLS versions), the receiver must decrypt and unpad the ciphertext **before** it can verify the MAC. Any error thrown during unpadding leaks the padding oracle before the MAC can be validated.
 
-### Question 4: How does AES-GCM prevent this class of vulnerabilities?
-**Answer**: AES-GCM utilizes Counter (CTR) mode combined with a Galois Message Authentication Code (GMAC). Counter mode is a stream cipher mode and does not use or require block padding, completely eliminating PKCS#7 vulnerabilities. Furthermore, GCM verifies a 128-bit authentication tag before releasing decrypted plaintext, ensuring cryptographic integrity.
+### 8.4 Mathematical Immunity of Authenticated Encryption (AES-GCM AEAD)
+**Analysis**: AES-GCM utilizes Counter (CTR) mode combined with a Galois Message Authentication Code (GMAC). Counter mode is a stream cipher mode and does not use or require block padding, completely eliminating PKCS#7 vulnerabilities. Furthermore, GCM verifies a 128-bit authentication tag before releasing decrypted plaintext, ensuring complete cryptographic integrity.
 
 ---
 
