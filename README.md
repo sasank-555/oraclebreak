@@ -6,6 +6,9 @@
 **Branch & Section**: Electronics and Communication Engineering (ECE - A)  
 **Institution**: National Institute of Technology Warangal (NITW)  
 
+🌐 **Live GitHub Pages URL**: **[https://sasank-555.github.io/oraclebreak/](https://sasank-555.github.io/oraclebreak/)**  
+📦 **GitHub Repository**: **[https://github.com/sasank-555/oraclebreak](https://github.com/sasank-555/oraclebreak)**  
+
 ---
 
 ## 🎯 Executive Overview

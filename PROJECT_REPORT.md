@@ -11,6 +11,8 @@
 - **Branch / Section**: B.Tech Electronics and Communication Engineering (ECE - A)
 - **Course**: Cryptography and Network Security (CNS)
 - **Academic Year**: 2026-2027
+- **Live Interactive Deployment**: [https://sasank-555.github.io/oraclebreak/](https://sasank-555.github.io/oraclebreak/)
+- **Source Code Repository**: [https://github.com/sasank-555/oraclebreak](https://github.com/sasank-555/oraclebreak)
 
 ---
 
