@@ -169,7 +169,7 @@
           </div>
           <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800 lg:col-span-2">
             <div class="text-zinc-500 font-sans font-medium mb-1 flex items-center justify-between">
-              <span>Ciphertext Sequence ($C_1 \dots C_n$)</span>
+              <span>Ciphertext Sequence (C₁ ... Cₙ)</span>
               <span id="disp-block-count" class="text-[10px] text-zinc-400 font-mono">1 Block (16 bytes)</span>
             </div>
             <div id="disp-ct" class="text-zinc-300 break-all">Generating...</div>
@@ -325,7 +325,7 @@
               <h4 class="text-xs font-medium text-zinc-300 mb-2">Selected Byte Cryptographic Registers</h4>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
                 <div class="bg-zinc-950 p-2 rounded border border-zinc-800">
-                  <span class="text-[10px] text-zinc-500 block">Candidate Guess ($C'$)</span>
+                  <span class="text-[10px] text-zinc-500 block">Candidate Guess (C')</span>
                   <span id="inspect-candidate" class="text-zinc-200 font-bold">--</span>
                 </div>
                 <div class="bg-zinc-950 p-2 rounded border border-zinc-800">
@@ -333,11 +333,11 @@
                   <span id="inspect-pad" class="text-zinc-200 font-bold">--</span>
                 </div>
                 <div class="bg-zinc-950 p-2 rounded border border-zinc-800">
-                  <span class="text-[10px] text-zinc-500 block">Intermediate ($I = C' \oplus pad$)</span>
+                  <span class="text-[10px] text-zinc-500 block">Intermediate (I = C' ⊕ pad)</span>
                   <span id="inspect-inter" class="text-zinc-200 font-bold">--</span>
                 </div>
                 <div class="bg-zinc-950 p-2 rounded border border-zinc-800">
-                  <span class="text-[10px] text-zinc-500 block">Recovered ($P = I \oplus C_{orig}$)</span>
+                  <span class="text-[10px] text-zinc-500 block">Recovered (P = I ⊕ C_prev)</span>
                   <span id="inspect-plain" class="text-zinc-100 font-bold">--</span>
                 </div>
               </div>
@@ -395,7 +395,7 @@
               <div class="p-3 bg-zinc-900 rounded-lg border border-zinc-800">
                 <span class="text-[10px] text-zinc-500 block uppercase font-sans">Step 1: Block Decryption</span>
                 <span class="text-zinc-100 font-bold block my-1">AES_Decrypt(K, C_i)</span>
-                <span class="text-zinc-400 text-[11px]">= Intermediate State $I_i$</span>
+                <span class="text-zinc-400 text-[11px]">= Intermediate State Iᵢ</span>
               </div>
               <div class="p-3 bg-zinc-900 rounded-lg border border-zinc-800">
                 <span class="text-[10px] text-zinc-500 block uppercase font-sans">Step 2: Chaining XOR</span>
@@ -410,7 +410,7 @@
             </div>
 
             <div class="p-3 bg-zinc-900 border border-zinc-700 rounded-lg text-zinc-300 text-xs leading-relaxed font-sans">
-              <strong class="text-white">Architectural Vulnerability:</strong> Because an adversary directly controls $C_{i-1}$, any modification to $C_{i-1}[k]$ induces an exact, deterministic bitwise transformation in decrypted $P_i[k]$. When a decryption service distinguishes padding validation outcomes from cryptographic failures, it operates as a linear equation solver for the intermediate state.
+              <strong class="text-white">Architectural Vulnerability:</strong> Because an adversary directly controls Cᵢ₋₁, any modification to Cᵢ₋₁[k] induces an exact, deterministic bitwise transformation in decrypted Pᵢ[k]. When a decryption service distinguishes padding validation outcomes from cryptographic failures, it operates as a linear equation solver for the intermediate state.
             </div>
           </div>
         </div>
@@ -593,14 +593,14 @@
             1. Cipher Block Chaining (CBC) Mathematical Formulation & Decryption Primitive
           </h3>
           <p>
-            In Cipher Block Chaining (CBC) mode, each plaintext block $P_i$ is XORed with the preceding ciphertext block $C_{i-1}$ prior to block cipher transformation:
+            In Cipher Block Chaining (CBC) mode, each plaintext block Pᵢ is XORed with the preceding ciphertext block Cᵢ₋₁ prior to block cipher transformation:
           </p>
           <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800 font-mono text-zinc-200 text-xs">
             Encryption Primitive:  C_i = E_K(P_i XOR C_{i-1})  [with C_0 = IV]<br>
             Decryption Primitive:  P_i = D_K(C_i) XOR C_{i-1}
           </div>
           <p>
-            Define the <strong>Intermediate State</strong> as $I_i = D_K(C_i)$. Crucially, $I_i$ is completely invariant of $C_{i-1}$ and depends strictly upon the secret key $K$ and ciphertext block $C_i$.
+            Define the <strong>Intermediate State</strong> as Iᵢ = D_K(Cᵢ). Crucially, Iᵢ is completely invariant of Cᵢ₋₁ and depends strictly upon the secret key K and ciphertext block Cᵢ.
           </p>
         </div>
 
@@ -610,17 +610,17 @@
             2. Vaudenay's Differential Padding-Oracle Theorem (EUROCRYPT 2002)
           </h3>
           <p>
-            Serge Vaudenay demonstrated that if a decryption endpoint distinguishes between cryptographic decryption errors and PKCS#7 padding validation failures, an adversary can recover $I_i$ byte-by-byte without knowledge of $K$.
+            Serge Vaudenay demonstrated that if a decryption endpoint distinguishes between cryptographic decryption errors and PKCS#7 padding validation failures, an adversary can recover Iᵢ byte-by-byte without knowledge of K.
           </p>
           <p>
-            To recover byte index $k$ (evaluated from 15 down to 0), target padding is established as $\text{pad} = 16 - k$. A crafted block $C'_{i-1}$ is presented:
+            To recover byte index k (evaluated from 15 down to 0), target padding is established as pad = 16 - k. A crafted block C'ᵢ₋₁ is presented:
           </p>
           <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800 font-mono text-zinc-200 text-xs space-y-1">
-            For established indices j > k:  C'_{i-1}[j] = I_i[j] XOR pad<br>
-            For target candidate index k:   C'_{i-1}[k] = g in [0, 255]<br>
+            For established indices j > k:  C'ᵢ₋₁[j] = Iᵢ[j] XOR pad<br>
+            For target candidate index k:   C'ᵢ₋₁[k] = g in [0, 255]<br>
             Upon Oracle Affirmation (Valid Padding 200 OK):<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;I_i[k] XOR g = pad  ===>  I_i[k] = g XOR pad<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;Plaintext Recovery:   P_i[k] = I_i[k] XOR C_{i-1}[k]
+            &nbsp;&nbsp;&nbsp;&nbsp;Iᵢ[k] XOR g = pad  ===>  Iᵢ[k] = g XOR pad<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;Plaintext Recovery:   Pᵢ[k] = Iᵢ[k] XOR Cᵢ₋₁[k]
           </div>
         </div>
 
@@ -633,15 +633,15 @@
             <div class="bg-zinc-950 p-3.5 rounded-lg border border-zinc-800 text-xs">
               <span class="font-bold text-zinc-200 block mb-1">Exhaustive Key Space Search:</span>
               <p class="text-zinc-400">
-                Complexity: $\mathcal{O}(2^{128})$ operations.<br>
-                Computational infeasibility: Exceeds $10^{20}$ years across distributed computing grids.
+                Complexity: O(2¹²⁸) operations.<br>
+                Computational infeasibility: Exceeds 10²⁰ years across distributed computing grids.
               </p>
             </div>
             <div class="bg-zinc-950 p-3.5 rounded-lg border border-zinc-800 text-xs">
               <span class="font-bold text-zinc-100 block mb-1">Differential Padding-Oracle Derivation:</span>
               <p class="text-zinc-400">
-                Complexity: $\mathcal{O}(256 \times L)$ oracle queries for $L$-byte ciphertext.<br>
-                Empirical requirement: $\approx 128 \times 16 = 2048$ queries per block (sub-second execution).
+                Complexity: O(256 × L) oracle queries for L-byte ciphertext.<br>
+                Empirical requirement: ~128 × 16 = 2,048 queries per block (sub-second execution).
               </p>
             </div>
           </div>
