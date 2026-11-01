@@ -33,8 +33,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function initClientOracle() {
   if (typeof ClientDecryptionOracle !== "undefined") {
-    clientOracle = new ClientDecryptionOracle("vulnerable");
+    const profile = document.getElementById('oracle-profile-select') ? document.getElementById('oracle-profile-select').value : "vulnerable";
+    clientOracle = new ClientDecryptionOracle(profile);
   }
+}
+
+function onProfileChange() {
+  const profileSelect = document.getElementById('oracle-profile-select');
+  const profile = profileSelect ? profileSelect.value : 'vulnerable';
+  if (typeof ClientDecryptionOracle !== "undefined") {
+    clientOracle = new ClientDecryptionOracle(profile);
+  }
+  generateTargetCiphertext();
+  logWire(`Active Oracle Profile switched to: ${profile.toUpperCase()}`);
 }
 
 // Tab Navigation
@@ -120,13 +131,14 @@ function selectByteCell(pos) {
 // Generate Target Ciphertext from Input
 async function generateTargetCiphertext() {
   const pt = document.getElementById('target-plaintext').value || "SECRET_MSG";
+  const profile = document.getElementById('oracle-profile-select') ? document.getElementById('oracle-profile-select').value : "vulnerable";
 
   let data = null;
   try {
     const res = await fetch('/api/encrypt', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ plaintext: pt })
+      body: JSON.stringify({ plaintext: pt, profile: profile })
     });
     if (res.ok) {
       data = await res.json();
@@ -134,7 +146,9 @@ async function generateTargetCiphertext() {
   } catch (err) {}
 
   if (!data && typeof ClientCryptoEngine !== "undefined") {
-    if (!clientOracle) initClientOracle();
+    if (!clientOracle || clientOracle.profile !== profile) {
+      clientOracle = new ClientDecryptionOracle(profile);
+    }
     clientOracle.resetMetrics();
     const enc = clientOracle.encryptMessage(pt);
     const ctBytes = ClientCryptoEngine.hexToBytes(enc.ciphertext);
@@ -239,6 +253,8 @@ async function crackNextByteStep() {
 
   let data = null;
 
+  const profile = document.getElementById('oracle-profile-select') ? document.getElementById('oracle-profile-select').value : 'vulnerable';
+
   try {
     const res = await fetch('/api/attack/step', {
       method: 'POST',
@@ -247,7 +263,8 @@ async function crackNextByteStep() {
         c_prev_hex: c_prev_hex,
         c_curr_hex: c_curr_hex,
         byte_pos: bytePos,
-        known_intermediate_hex: interHex
+        known_intermediate_hex: interHex,
+        profile: profile
       })
     });
     if (res.ok) {
@@ -260,13 +277,9 @@ async function crackNextByteStep() {
       const cPrevBytes = ClientCryptoEngine.hexToBytes(c_prev_hex);
       const cCurrBytes = ClientCryptoEngine.hexToBytes(c_curr_hex);
       const res = ClientAttacker.solveByte(clientOracle, cPrevBytes, cCurrBytes, bytePos, stepState.knownIntermediate);
-      data = {
-        success: true,
-        ...res
-      };
+      data = res;
     } catch (e) {
-      alert("Error solving byte: " + e.message);
-      return;
+      data = { success: false, error: e.message };
     }
   }
 
@@ -312,6 +325,15 @@ async function crackNextByteStep() {
       }
     }
     updateStepIndicators();
+    return true;
+  } else {
+    cell.classList.remove('byte-probing');
+    cell.classList.add('border-zinc-800', 'bg-zinc-950');
+    document.getElementById('attack-status-badge').className = "px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-600";
+    document.getElementById('attack-status-badge').innerText = "Neutralized / Protected";
+    const err = (data && data.error) ? data.error : "Decryption rejected by server.";
+    logWire(`[ORACLE MITIGATION ACTIVE] ${err}`, false, true);
+    return false;
   }
 }
 
@@ -343,15 +365,23 @@ async function startAutoAttack() {
       const delay = parseInt(document.getElementById('speed-slider').value) || 30;
       await new Promise(r => setTimeout(r, delay));
 
-      await crackNextByteStep();
+      const success = await crackNextByteStep();
+      if (!success) {
+        isAttacking = false;
+        break;
+      }
     }
+    if (!isAttacking) break;
   }
 
+  const finishedAll = stepState.recoveredPlaintext.length === (numBlocks * 16);
   isAttacking = false;
   document.getElementById('btn-start-auto').disabled = false;
   document.getElementById('btn-stop-auto').disabled = true;
-  document.getElementById('attack-status-badge').className = "px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-800 text-zinc-100 border border-zinc-600";
-  document.getElementById('attack-status-badge').innerText = "Finished 100%";
+  if (finishedAll) {
+    document.getElementById('attack-status-badge').className = "px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-800 text-zinc-100 border border-zinc-600";
+    document.getElementById('attack-status-badge').innerText = "Finished 100%";
+  }
 }
 
 function stopAutoAttack() {

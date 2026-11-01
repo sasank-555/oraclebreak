@@ -194,7 +194,11 @@ def attack_single_byte(req: StepAttackRequest):
             break
 
     if found_candidate is None:
-        return JSONResponse(status_code=400, content={"error": f"Failed to solve byte {byte_pos}"})
+        return {
+            "success": False,
+            "error": f"Oracle rejected all candidate bytes (Profile '{oracle.profile}' successfully protected).",
+            "total_queries": oracle.query_count
+        }
 
     inter_byte = found_candidate ^ pad_val
     pt_byte = inter_byte ^ c_prev[byte_pos]

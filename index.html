@@ -142,15 +142,27 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-          <div class="md:col-span-3 space-y-1.5">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+          <div class="md:col-span-4 space-y-1.5">
+            <label class="text-xs font-medium text-zinc-300 flex items-center gap-1.5">
+              <i data-lucide="shield" class="w-3.5 h-3.5 text-zinc-400"></i> Decryption Oracle Profile:
+            </label>
+            <select id="oracle-profile-select" onchange="onProfileChange()" 
+              class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-2.5 text-xs text-zinc-100 font-mono focus:border-zinc-500 focus:outline-none transition cursor-pointer">
+              <option value="vulnerable">Vulnerable CBC (HTTP 500 Padding Leak)</option>
+              <option value="uniform_error">Uniform Error Handling (HTTP 400 Generic)</option>
+              <option value="encrypt_then_mac">Encrypt-then-MAC (HMAC-SHA256)</option>
+              <option value="aes_gcm">AES-GCM (Authenticated AEAD)</option>
+            </select>
+          </div>
+          <div class="md:col-span-5 space-y-1.5">
             <label class="text-xs font-medium text-zinc-300">Target Plaintext Payload:</label>
             <div class="relative">
               <input type="text" id="target-plaintext" value="FLAG{NITW_ECB_2026}" 
                 class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-zinc-100 font-mono focus:border-zinc-500 focus:outline-none transition">
             </div>
           </div>
-          <div>
+          <div class="md:col-span-3">
             <button onclick="generateTargetCiphertext()" id="btn-encrypt"
               class="w-full bg-white text-zinc-950 hover:bg-zinc-200 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition text-sm">
               <i data-lucide="lock" class="w-4 h-4"></i> Initialize Ciphertext

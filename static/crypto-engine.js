@@ -228,17 +228,11 @@ class ClientDecryptionOracle {
           result.message = pe.message;
         }
       } else if (this.profile === "uniform_error") {
-        try {
-          ClientCryptoEngine.decryptCbc(ctBytes, this.key, ivBytes);
-          result.valid = true;
-          result.status_code = 200;
-          result.message = "Decryption succeeded.";
-        } catch (e) {
-          result.valid = false;
-          result.error_type = "GENERIC_ERROR";
-          result.status_code = 400;
-          result.message = "Decryption failed (uniform error).";
-        }
+        // Uniform error mitigation: suppress padding leak by returning constant generic 400
+        result.valid = false;
+        result.error_type = "GENERIC_ERROR";
+        result.status_code = 400;
+        result.message = "Decryption failed (generic indistinguishable error).";
       } else if (this.profile === "encrypt_then_mac") {
         const combined = new Uint8Array(ivBytes.length + ctBytes.length);
         combined.set(ivBytes, 0);
@@ -300,13 +294,18 @@ class ClientAttacker {
     }
 
     if (foundCandidate === null) {
-      throw new Error(`Failed to solve byte ${bytePos}`);
+      return {
+        success: false,
+        error: `Oracle rejected all candidate bytes (Decryption profile '${oracle.profile}' successfully protected).`,
+        total_queries: oracle.queryCount
+      };
     }
 
     const interByte = foundCandidate ^ padVal;
     const ptByte = interByte ^ cPrev[bytePos];
 
     return {
+      success: true,
       byte_pos: bytePos,
       pad_val: padVal,
       found_candidate_hex: `0x${foundCandidate.toString(16).padStart(2, '0')}`,
