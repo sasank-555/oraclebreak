@@ -874,6 +874,7 @@ const walkthroughSteps = [
   }
 ];
 
+
 function setWalkthroughStep(idx) {
   if (idx < 0) idx = 0;
   if (idx >= walkthroughSteps.length) idx = walkthroughSteps.length - 1;
@@ -892,37 +893,160 @@ function setWalkthroughStep(idx) {
     }
   }
 
-  // Update DOM elements if present
-  const badgeEl = document.getElementById('wt-badge');
-  if (badgeEl) badgeEl.innerText = s.badge;
-  const titleEl = document.getElementById('wt-title');
-  if (titleEl) titleEl.innerText = s.title;
-  const storyEl = document.getElementById('wt-story');
-  if (storyEl) storyEl.innerText = s.story;
-  const formulaEl = document.getElementById('wt-formula');
-  if (formulaEl) formulaEl.innerText = s.formula;
-  const ivEl = document.getElementById('wt-alice-iv');
-  if (ivEl) ivEl.innerText = s.aliceIv;
-  const interEl = document.getElementById('wt-server-inter');
-  if (interEl) interEl.innerText = s.serverInter;
-  const guessEl = document.getElementById('wt-bob-guess');
-  if (guessEl) guessEl.innerText = s.bobGuess;
-  const calcEl = document.getElementById('wt-server-calc');
-  if (calcEl) calcEl.innerText = s.serverCalc;
+  // Update DOM elements with fade-in animation
+  function animFill(id, text) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.animation = 'none';
+    el.offsetHeight; // reflow
+    el.innerText = text;
+    el.style.animation = '';
+    el.classList.remove('wt-fadein');
+    void el.offsetWidth;
+    el.classList.add('wt-fadein');
+  }
+
+  animFill('wt-badge',       s.badge);
+  animFill('wt-title',       s.title);
+  animFill('wt-story',       s.story);
+  animFill('wt-formula',     s.formula);
+  animFill('wt-alice-iv',    s.aliceIv);
+  animFill('wt-server-inter',s.serverInter);
+  animFill('wt-bob-guess',   s.bobGuess);
+  animFill('wt-server-calc', s.serverCalc);
+  animFill('wt-revealed',    s.revealedLetter);
+  animFill('wt-explanation', s.explanation);
+
+  // Status badge
   const statusEl = document.getElementById('wt-server-status');
   if (statusEl) {
     statusEl.innerText = s.serverStatus;
     statusEl.className = `px-2 py-0.5 rounded text-[11px] font-mono border ${s.statusClass}`;
+    // Remove then re-add pulse/flash class
+    statusEl.classList.remove('wt-pulse-ok', 'wt-flash-err');
+    void statusEl.offsetWidth;
+    if (idx === 3) statusEl.classList.add('wt-pulse-ok');
+    if (idx === 1 || idx === 2) statusEl.classList.add('wt-flash-err');
   }
-  const revEl = document.getElementById('wt-revealed');
-  if (revEl) revEl.innerText = s.revealedLetter;
-  const expEl = document.getElementById('wt-explanation');
-  if (expEl) expEl.innerText = s.explanation;
 
+  // Prev/Next disabled states
   const prevBtn = document.getElementById('wt-prev-btn');
   if (prevBtn) prevBtn.disabled = (idx === 0);
   const nextBtn = document.getElementById('wt-next-btn');
   if (nextBtn) nextBtn.disabled = (idx === walkthroughSteps.length - 1);
+
+  // Animate the network diagram
+  animateWalkthroughStep(idx);
+}
+
+// Per-step network diagram state
+const wtDiagramState = [
+  // Step 0: Alice → Server, 200 OK
+  { payload: 'IV=10, C₁  (Alice\'s real packet)', response: 'HTTP 200 OK', serverBadgeText: 'ORACLE', serverBadgeClass: 'bg-zinc-800 text-zinc-300 border-zinc-700', showCounter: false },
+  // Step 1: Bob sends g=0
+  { payload: 'Forged IV (g=0), C₁', response: 'HTTP 500 Error', serverBadgeText: 'REJECT', serverBadgeClass: 'bg-red-950/60 text-red-300 border-red-800/80', showCounter: false },
+  // Step 2: Bob sweeps 0..73
+  { payload: 'Forged IV (g=0…73), C₁', response: 'HTTP 500 (×74 times)', serverBadgeText: 'REJECT', serverBadgeClass: 'bg-red-950/60 text-red-300 border-red-800/80', showCounter: true },
+  // Step 3: g=74 → 200 OK leak
+  { payload: 'Forged IV (g=74), C₁  ← KEY SHOT', response: '⚡ HTTP 200 OK  ← ORACLE LEAK', serverBadgeText: 'ORACLE LEAK!', serverBadgeClass: 'bg-white text-zinc-950 border-zinc-300 font-bold', showCounter: false },
+  // Step 4: Recovery
+  { payload: 'I=75 recovered  →  75 ⊕ 10 = 65', response: '"A" (ASCII 65) — CRACKED!', serverBadgeText: 'CRACKED', serverBadgeClass: 'bg-zinc-800 text-zinc-100 border-zinc-500', showCounter: false },
+];
+
+let _probeCounterTimer = null;
+
+function animateWalkthroughStep(idx) {
+  const state = wtDiagramState[idx];
+  if (!state) return;
+
+  // Update payload / response labels
+  const payloadEl = document.getElementById('wt-net-payload');
+  if (payloadEl) { payloadEl.innerText = state.payload; payloadEl.classList.remove('wt-fadein'); void payloadEl.offsetWidth; payloadEl.classList.add('wt-fadein'); }
+
+  const responseEl = document.getElementById('wt-net-response');
+  if (responseEl) { responseEl.innerText = state.response; responseEl.classList.remove('wt-fadein'); void responseEl.offsetWidth; responseEl.classList.add('wt-fadein'); }
+
+  // Server badge
+  const srvBadge = document.getElementById('wt-server-badge');
+  if (srvBadge) {
+    srvBadge.innerText = state.serverBadgeText;
+    srvBadge.className = `text-[10px] font-mono px-1.5 py-0.5 rounded border ${state.serverBadgeClass}`;
+    srvBadge.classList.remove('wt-pulse-ok');
+    if (idx === 3) srvBadge.classList.add('wt-pulse-ok');
+  }
+
+  // Show/hide probe counter
+  const counterRow = document.getElementById('wt-counter-row');
+  if (counterRow) {
+    if (state.showCounter) {
+      counterRow.classList.remove('hidden');
+      runProbeCounter();
+    } else {
+      counterRow.classList.add('hidden');
+      if (_probeCounterTimer) { clearInterval(_probeCounterTimer); _probeCounterTimer = null; }
+    }
+  }
+
+  // Animate packet dots on the lanes
+  fireDots(idx);
+}
+
+function fireDots(idx) {
+  const sendLane = document.getElementById('wt-lane-send');
+  const recvLane = document.getElementById('wt-lane-recv');
+  if (!sendLane || !recvLane) return;
+
+  // Helper: spawn a travelling dot
+  function spawnDot(lane, cssClass, delay) {
+    setTimeout(() => {
+      // Remove old dot
+      const old = lane.querySelector('.wt-dot');
+      if (old) old.remove();
+      const dot = document.createElement('div');
+      dot.className = `wt-dot ${cssClass}`;
+      if (cssClass === 'receive') dot.style.right = '0';
+      lane.appendChild(dot);
+      // Clean up after animation
+      dot.addEventListener('animationend', () => dot.remove(), { once: true });
+    }, delay);
+  }
+
+  // Repeat dots for looping effect (3 times)
+  const period = idx === 2 ? 500 : 1000; // faster for sweep step
+  [0, period, period * 2].forEach(d => {
+    spawnDot(sendLane, 'send',    d);
+    spawnDot(recvLane, 'receive', d + 80);
+  });
+}
+
+function runProbeCounter() {
+  if (_probeCounterTimer) { clearInterval(_probeCounterTimer); _probeCounterTimer = null; }
+  const counterEl = document.getElementById('wt-probe-counter');
+  const resultEl  = document.getElementById('wt-probe-result');
+  if (!counterEl || !resultEl) return;
+
+  let g = 0;
+  counterEl.innerText = g;
+  resultEl.innerText = '500 Error';
+  resultEl.className = 'text-[11px] font-mono px-2 py-0.5 rounded border bg-red-950/60 text-red-300 border-red-800/80';
+
+  _probeCounterTimer = setInterval(() => {
+    g++;
+    counterEl.innerText = g;
+    if (g < 74) {
+      resultEl.innerText = '500 Error';
+      resultEl.className = 'text-[11px] font-mono px-2 py-0.5 rounded border bg-red-950/60 text-red-300 border-red-800/80';
+    } else {
+      // Reached 74 — show GREEN then reset to 0
+      resultEl.innerText = '200 OK ← LEAK!';
+      resultEl.className = 'text-[11px] font-mono px-2 py-0.5 rounded border bg-white text-zinc-950 border-zinc-300 font-bold';
+      clearInterval(_probeCounterTimer);
+      // Restart after a brief pause
+      setTimeout(() => {
+        if (currentWalkthroughIndex === 2) runProbeCounter();
+      }, 1800);
+    }
+  }, 55); // ~55ms per step → 74 * 55 ≈ 4s per sweep cycle
 }
 
 function prevWalkthroughStep() {
