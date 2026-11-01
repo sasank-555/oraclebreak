@@ -29,6 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
   generateTargetCiphertext();
   updateVisualizer();
   loadBenchmarks();
+  if (typeof setWalkthroughStep === "function") {
+    setWalkthroughStep(0);
+  }
 });
 
 function initClientOracle() {
@@ -50,18 +53,20 @@ function onProfileChange() {
 
 // Tab Navigation
 function switchTab(tabId) {
-  const tabs = ['exploit', 'visualizer', 'tampering', 'mitigations', 'tests', 'theory'];
+  const tabs = ['exploit', 'walkthrough', 'visualizer', 'tampering', 'mitigations', 'tests', 'theory'];
   tabs.forEach(t => {
     const section = document.getElementById(`tab-${t}`);
     const btn = document.getElementById(`tab-btn-${t}`);
-    if (t === tabId) {
-      section.classList.remove('hidden');
-      btn.classList.add('border-white', 'text-white');
-      btn.classList.remove('border-transparent', 'text-zinc-400');
-    } else {
-      section.classList.add('hidden');
-      btn.classList.remove('border-white', 'text-white');
-      btn.classList.add('border-transparent', 'text-zinc-400');
+    if (section && btn) {
+      if (t === tabId) {
+        section.classList.remove('hidden');
+        btn.classList.add('border-white', 'text-white');
+        btn.classList.remove('border-transparent', 'text-zinc-400');
+      } else {
+        section.classList.add('hidden');
+        btn.classList.remove('border-white', 'text-white');
+        btn.classList.add('border-transparent', 'text-zinc-400');
+      }
     }
   });
   lucide.createIcons();
@@ -785,4 +790,145 @@ function runClientTestSuite() {
     total_time_ms: totalTime,
     results: results
   };
+}
+
+// -------------------------------------------------------------
+// Interactive Attack Walkthrough Controller
+// -------------------------------------------------------------
+let currentWalkthroughIndex = 0;
+const walkthroughSteps = [
+  {
+    step: 1,
+    badge: "1. Normal Communication Setup",
+    title: "Normal Communication: Alice Encrypts Message Ending in 'A'",
+    story: "Alice wants to send a secret message ending in the letter 'A' (ASCII 65). She encrypts it using AES-128-CBC. Alice sends her Initialization Vector (IV = 10) and Ciphertext C₁ over the network to the server.",
+    formula: "Normal Decryption: Plaintext = Intermediate ⊕ IV  -->  75 ⊕ 10 = 65 ('A')",
+    aliceIv: "10 (Decimal)",
+    serverInter: "75 (Hidden inside server RAM)",
+    bobGuess: "-- (Bob only listens on wire)",
+    serverCalc: "75 ⊕ 10 = 65 ('A')",
+    serverStatus: "200 OK (Legitimate Request)",
+    statusClass: "text-zinc-100 bg-zinc-800 border-zinc-700",
+    revealedLetter: "-- (Hidden)",
+    explanation: "Bob intercepts Alice's packet. Bob sees IV = 10 and Ciphertext C₁. Bob does NOT know the AES key, and he does NOT know the number 75. His goal is to find 'A' (65)."
+  },
+  {
+    step: 2,
+    badge: "2. Forging Candidate IV",
+    title: "Bob Forges a Candidate IV and Queries Decryption",
+    story: "Bob cuts Alice's IV out and replaces it with his own crafted IV: all zeroes, ending with his first guess g = 0. He sends [Crafted IV, C₁] to the server. The server runs AES on C₁: because C₁ and the key haven't changed, AES still outputs the exact same intermediate number: 75!",
+    formula: "Server Decrypts Candidate: P'[16] = Intermediate ⊕ g  -->  75 ⊕ 0 = 75",
+    aliceIv: "10 (Saved by Bob for later)",
+    serverInter: "75 (Constant AES intermediate state)",
+    bobGuess: "g = 0 (Testing first candidate)",
+    serverCalc: "75 ⊕ 0 = 75 (Invalid PKCS#7 pad)",
+    serverStatus: "500 Internal Server Error (Bad Pad)",
+    statusClass: "text-red-300 bg-red-950/60 border-red-800/80",
+    revealedLetter: "--",
+    explanation: "The server computes 75 ⊕ 0 = 75. It inspects the padding: 75 is invalid PKCS#7 padding! The server crashes and returns HTTP 500. Bob knows g = 0 was NOT the match."
+  },
+  {
+    step: 3,
+    badge: "3. Probing 0 to 255",
+    title: "Bob Systematically Sweeps Candidate Bytes",
+    story: "Bob writes a simple loop testing g = 1, 2, 3, ... up to 73. For every single one of these guesses, 75 ⊕ g produces random non-padding bytes. The server continuously crashes with HTTP 500 Padding Errors.",
+    formula: "For g = 1: 75 ⊕ 1 = 74 (500 Error)  |  For g = 50: 75 ⊕ 50 = 125 (500 Error)",
+    aliceIv: "10",
+    serverInter: "75",
+    bobGuess: "g = 1, 2, 3 ... 73",
+    serverCalc: "75 ⊕ g != 0x01 (Malformed Pad)",
+    serverStatus: "500 Internal Server Error (74 attempts)",
+    statusClass: "text-red-300 bg-red-950/60 border-red-800/80",
+    revealedLetter: "--",
+    explanation: "The remote server acts as a blind calculation machine. Bob cannot see inside the server's memory, but every 500 Error confirms that the decrypted byte did NOT end in 0x01."
+  },
+  {
+    step: 4,
+    badge: "4. The 200 OK Oracle Leak",
+    title: "The Breakthrough: Server Returns HTTP 200 OK!",
+    story: "Bob sends guess g = 74. Inside the server: 75 ⊕ 74 = 1! The server looks at the last byte: it sees the number 1. The server thinks: 'Aha! Valid 1-byte PKCS#7 padding!' and returns HTTP 200 OK!",
+    formula: "Identity Established: I ⊕ 74 = 0x01  -->  I = 74 ⊕ 1 = 75",
+    aliceIv: "10",
+    serverInter: "75 (Cracked via XOR identity!)",
+    bobGuess: "g = 74 (Target match!)",
+    serverCalc: "75 ⊕ 74 = 0x01 (VALID 1-BYTE PAD)",
+    serverStatus: "200 OK (Padding Validation Passed!)",
+    statusClass: "text-zinc-950 bg-white font-bold border-zinc-200",
+    revealedLetter: "Intermediate = 75",
+    explanation: "This is the 'Oracle'! That single 200 OK status code leaks that the output was 0x01. Bob uses XOR algebra (I = 74 ⊕ 1) to derive the server's secret intermediate number: 75!"
+  },
+  {
+    step: 5,
+    badge: "5. Plaintext Decrypted!",
+    title: "Plaintext Recovery Complete: Letter 'A' Revealed!",
+    story: "Now Bob holds the cracked intermediate number 75. He retrieves Alice's original intercepted IV (10). Applying the CBC chaining formula: P = I ⊕ Original IV = 75 ⊕ 10 = 65. In ASCII, 65 is the letter 'A'!",
+    formula: "Plaintext = I ⊕ Original IV  -->  75 ⊕ 10 = 65  -->  ASCII: 'A'",
+    aliceIv: "10 (Alice's original intercepted IV)",
+    serverInter: "75 (Cracked Intermediate State)",
+    bobGuess: "g = 74 (Solved in 75 total queries)",
+    serverCalc: "75 ⊕ 10 = 65 (ASCII: 'A')",
+    serverStatus: "PLAINTEXT CRACKED: 'A'",
+    statusClass: "text-zinc-100 bg-zinc-900 font-bold border-zinc-500",
+    revealedLetter: "'A' (ASCII 65)",
+    explanation: "Bob decrypted the letter 'A' in just 75 network queries without breaking AES or knowing the key! Bob now moves to byte 14 with target pad 0x02 0x02, repeating until the entire message is recovered."
+  }
+];
+
+function setWalkthroughStep(idx) {
+  if (idx < 0) idx = 0;
+  if (idx >= walkthroughSteps.length) idx = walkthroughSteps.length - 1;
+  currentWalkthroughIndex = idx;
+  const s = walkthroughSteps[idx];
+
+  // Update button highlights
+  for (let i = 0; i < walkthroughSteps.length; i++) {
+    const btn = document.getElementById(`wt-step-btn-${i}`);
+    if (btn) {
+      if (i === idx) {
+        btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-zinc-950 transition";
+      } else {
+        btn.className = "px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800 transition";
+      }
+    }
+  }
+
+  // Update DOM elements if present
+  const badgeEl = document.getElementById('wt-badge');
+  if (badgeEl) badgeEl.innerText = s.badge;
+  const titleEl = document.getElementById('wt-title');
+  if (titleEl) titleEl.innerText = s.title;
+  const storyEl = document.getElementById('wt-story');
+  if (storyEl) storyEl.innerText = s.story;
+  const formulaEl = document.getElementById('wt-formula');
+  if (formulaEl) formulaEl.innerText = s.formula;
+  const ivEl = document.getElementById('wt-alice-iv');
+  if (ivEl) ivEl.innerText = s.aliceIv;
+  const interEl = document.getElementById('wt-server-inter');
+  if (interEl) interEl.innerText = s.serverInter;
+  const guessEl = document.getElementById('wt-bob-guess');
+  if (guessEl) guessEl.innerText = s.bobGuess;
+  const calcEl = document.getElementById('wt-server-calc');
+  if (calcEl) calcEl.innerText = s.serverCalc;
+  const statusEl = document.getElementById('wt-server-status');
+  if (statusEl) {
+    statusEl.innerText = s.serverStatus;
+    statusEl.className = `px-2 py-0.5 rounded text-[11px] font-mono border ${s.statusClass}`;
+  }
+  const revEl = document.getElementById('wt-revealed');
+  if (revEl) revEl.innerText = s.revealedLetter;
+  const expEl = document.getElementById('wt-explanation');
+  if (expEl) expEl.innerText = s.explanation;
+
+  const prevBtn = document.getElementById('wt-prev-btn');
+  if (prevBtn) prevBtn.disabled = (idx === 0);
+  const nextBtn = document.getElementById('wt-next-btn');
+  if (nextBtn) nextBtn.disabled = (idx === walkthroughSteps.length - 1);
+}
+
+function prevWalkthroughStep() {
+  setWalkthroughStep(currentWalkthroughIndex - 1);
+}
+
+function nextWalkthroughStep() {
+  setWalkthroughStep(currentWalkthroughIndex + 1);
 }

@@ -15,7 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <!-- CryptoJS for 100% Client-Side Execution -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
-  <script src="./static/crypto-engine.js?v=20261101_final"></script>
+  <script src="./static/crypto-engine.js?v=20261101_wt"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
@@ -94,6 +94,9 @@
     <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto custom-scrollbar border-t border-zinc-800/80 gap-1 text-sm font-medium">
       <button onclick="switchTab('exploit')" id="tab-btn-exploit" class="tab-btn px-4 py-2.5 border-b-2 border-white text-white flex items-center gap-2 whitespace-nowrap">
         <i data-lucide="terminal" class="w-4 h-4"></i> Cryptanalysis Lab
+      </button>
+      <button onclick="switchTab('walkthrough')" id="tab-btn-walkthrough" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 flex items-center gap-2 whitespace-nowrap">
+        <i data-lucide="compass" class="w-4 h-4"></i> Attack Walkthrough & Case Studies
       </button>
       <button onclick="switchTab('visualizer')" id="tab-btn-visualizer" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 flex items-center gap-2 whitespace-nowrap">
         <i data-lucide="blocks" class="w-4 h-4"></i> Block Architecture & PKCS#7
@@ -368,6 +371,229 @@
         </div>
 
       </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- TAB 1.5: STEP-BY-STEP ATTACK WALKTHROUGH & CASE STUDIES   -->
+    <!-- ======================================================== -->
+    <section id="tab-walkthrough" class="space-y-6 hidden">
+      
+      <!-- Top Overview Header Card -->
+      <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm space-y-2">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h2 class="text-sm font-semibold text-zinc-100 flex items-center gap-2">
+              <i data-lucide="compass" class="w-4 h-4 text-zinc-400"></i>
+              Interactive Attack Walkthrough & Real-World Historical Precedents
+            </h2>
+            <p class="text-xs text-zinc-400 mt-0.5">
+              A concrete, number-by-number demonstration of Serge Vaudenay's padding-oracle vulnerability using letter 'A' (ASCII 65), alongside major industry CVE case studies.
+            </p>
+          </div>
+          <span class="px-2.5 py-1 text-xs bg-zinc-800 text-zinc-300 rounded border border-zinc-700 font-mono">
+            Vaudenay (EUROCRYPT 2002)
+          </span>
+        </div>
+      </div>
+
+      <!-- Interactive 5-Step Explainer Card -->
+      <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm space-y-5">
+        
+        <!-- Step Navigation Pills -->
+        <div class="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800 pb-4">
+          <div class="flex flex-wrap gap-1.5">
+            <button onclick="setWalkthroughStep(0)" id="wt-step-btn-0" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white text-zinc-950 transition">1. Setup</button>
+            <button onclick="setWalkthroughStep(1)" id="wt-step-btn-1" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800 transition">2. Forged IV</button>
+            <button onclick="setWalkthroughStep(2)" id="wt-step-btn-2" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800 transition">3. Probing 0..255</button>
+            <button onclick="setWalkthroughStep(3)" id="wt-step-btn-3" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800 transition">4. 200 OK Leak</button>
+            <button onclick="setWalkthroughStep(4)" id="wt-step-btn-4" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800 transition">5. Plaintext Revealed</button>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="prevWalkthroughStep()" id="wt-prev-btn" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-zinc-900 text-zinc-300 hover:bg-zinc-800 border border-zinc-800 transition flex items-center gap-1 disabled:opacity-40">
+              <i data-lucide="chevron-left" class="w-3.5 h-3.5"></i> Previous
+            </button>
+            <button onclick="nextWalkthroughStep()" id="wt-next-btn" class="px-3 py-1.5 rounded-lg text-xs font-medium bg-white text-zinc-950 hover:bg-zinc-200 transition flex items-center gap-1 disabled:opacity-40">
+              Next Step <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step Content Banner -->
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <span id="wt-badge" class="px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-700">1. Normal Communication Setup</span>
+            <span id="wt-server-status" class="px-2 py-0.5 rounded text-[11px] font-mono border text-zinc-100 bg-zinc-800 border-zinc-700">200 OK (Legitimate Request)</span>
+          </div>
+          <h3 id="wt-title" class="text-base font-semibold text-zinc-100">Normal Communication: Alice Encrypts Message Ending in 'A'</h3>
+          <p id="wt-story" class="text-sm text-zinc-300 leading-relaxed">
+            Alice wants to send a secret message ending in the letter 'A' (ASCII 65). She encrypts it using AES-128-CBC. Alice sends her Initialization Vector (IV = 10) and Ciphertext C₁ over the network to the server.
+          </p>
+        </div>
+
+        <!-- Visual Cryptographic Registers (Live Numbers) -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 text-xs font-mono">
+          <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800">
+            <span class="text-[10px] text-zinc-500 block uppercase font-sans">Alice's Real IV</span>
+            <span id="wt-alice-iv" class="text-zinc-200 font-bold text-sm mt-1 block">10</span>
+            <span class="text-[10px] text-zinc-500 font-sans">Public on wire</span>
+          </div>
+          <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800">
+            <span class="text-[10px] text-zinc-500 block uppercase font-sans">Server Hidden State (I)</span>
+            <span id="wt-server-inter" class="text-zinc-200 font-bold text-sm mt-1 block">75</span>
+            <span class="text-[10px] text-zinc-500 font-sans">Inside server RAM</span>
+          </div>
+          <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800">
+            <span class="text-[10px] text-zinc-500 block uppercase font-sans">Bob's Forged IV Guess (g)</span>
+            <span id="wt-bob-guess" class="text-zinc-200 font-bold text-sm mt-1 block">--</span>
+            <span class="text-[10px] text-zinc-500 font-sans">Attacker input</span>
+          </div>
+          <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800">
+            <span class="text-[10px] text-zinc-500 block uppercase font-sans">Server Calculation</span>
+            <span id="wt-server-calc" class="text-zinc-200 font-bold text-xs mt-1 block">75 ⊕ 10 = 65</span>
+            <span class="text-[10px] text-zinc-500 font-sans">I ⊕ IV</span>
+          </div>
+          <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800">
+            <span class="text-[10px] text-zinc-500 block uppercase font-sans">Server Response</span>
+            <span class="text-zinc-100 font-bold text-xs mt-1 block">200 OK</span>
+            <span class="text-[10px] text-zinc-500 font-sans">Padding status</span>
+          </div>
+          <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-700">
+            <span class="text-[10px] text-zinc-400 block uppercase font-sans font-bold">Cracked Plaintext</span>
+            <span id="wt-revealed" class="text-white font-bold text-sm mt-1 block">-- (Hidden)</span>
+            <span class="text-[10px] text-zinc-500 font-sans">Target result</span>
+          </div>
+        </div>
+
+        <!-- Formula Callout Banner -->
+        <div class="bg-zinc-950 p-3.5 rounded-lg border border-zinc-800 font-mono text-xs flex flex-wrap items-center justify-between gap-2">
+          <span class="text-zinc-400">Mathematical Identity:</span>
+          <span id="wt-formula" class="text-zinc-100 font-bold">Normal Decryption: Plaintext = Intermediate ⊕ IV  -->  75 ⊕ 10 = 65 ('A')</span>
+        </div>
+
+        <!-- What to Say to Sir Callout Box -->
+        <div class="p-4 bg-zinc-950/80 rounded-xl border border-zinc-800 text-xs space-y-1.5 leading-relaxed">
+          <span class="text-zinc-400 font-medium uppercase text-[10px] tracking-wider block">Oral Presentation Pitch (What to Say):</span>
+          <p id="wt-explanation" class="text-zinc-200 font-sans">
+            Bob intercepts Alice's packet. Bob sees IV = 10 and Ciphertext C₁. Bob does NOT know the AES key, and he does NOT know the number 75. His goal is to find 'A' (65).
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Plain English Intuition (The Safe & LED Metaphor) -->
+      <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm space-y-3">
+        <h3 class="text-sm font-semibold text-zinc-100 flex items-center gap-2">
+          <i data-lucide="lightbulb" class="w-4 h-4 text-zinc-400"></i>
+          The Plain-English Lockbox Analogy (Intuition in 30 Seconds)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-sans leading-relaxed">
+          <div class="p-4 bg-zinc-950 rounded-lg border border-zinc-800 space-y-2">
+            <strong class="text-zinc-100 block">1. The Sealed Bank Vault</strong>
+            <p class="text-zinc-400">
+              The server holds a secret number (75) inside a locked vault. Alice sent an envelope with number 10. The vault calculates: <code class="text-zinc-300">75 ⊕ 10 = 65</code> (letter 'A'). Bob cannot open the vault.
+            </p>
+          </div>
+          <div class="p-4 bg-zinc-950 rounded-lg border border-zinc-800 space-y-2">
+            <strong class="text-zinc-100 block">2. The 1-Bit Indicator Light</strong>
+            <p class="text-zinc-400">
+              The vault has a security rule: <em class="text-zinc-200">"If the calculation ends in exactly 1, flash a GREEN LIGHT (200 OK). Otherwise, flash a RED LIGHT (500 Error)."</em> Bob feeds fake envelopes (guesses) into the slot.
+            </p>
+          </div>
+          <div class="p-4 bg-zinc-950 rounded-lg border border-zinc-800 space-y-2">
+            <strong class="text-zinc-100 block">3. The Instant Reversal</strong>
+            <p class="text-zinc-400">
+              When Bob feeds envelope 74, the vault flashes <strong class="text-white">GREEN</strong>! Bob knows <code class="text-zinc-300">Vault ⊕ 74 = 1</code>, so the Vault is 75! Bob does <code class="text-zinc-300">75 ⊕ 10 = 65</code> and reads Alice's letter without touching AES!
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Real-World Case Studies & Historical Exploitations -->
+      <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm space-y-4">
+        <div>
+          <h3 class="text-sm font-semibold text-zinc-100 flex items-center gap-2">
+            <i data-lucide="globe" class="w-4 h-4 text-zinc-400"></i>
+            Real-World Impact: Major CVE Vulnerabilities & Historical Case Studies
+          </h3>
+          <p class="text-xs text-zinc-400 mt-0.5">
+            Where CBC padding-oracle attacks brought down enterprise production systems in cybersecurity history.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-sans">
+          
+          <!-- Case Study 1: Microsoft ASP.NET MS10-070 -->
+          <div class="p-4 bg-zinc-950 rounded-xl border border-zinc-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-zinc-100 text-sm">Microsoft ASP.NET MS10-070</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-700">CVE-2010-3332</span>
+            </div>
+            <p class="text-zinc-400 leading-relaxed">
+              <strong>The Target:</strong> Microsoft ASP.NET encrypted authentication cookies and <code class="text-zinc-300 font-mono">ViewState</code> using AES-CBC.
+            </p>
+            <p class="text-zinc-400 leading-relaxed">
+              <strong>The Exploit:</strong> Security researchers <em>Juliano Rizzo</em> and <em>Thai Duong</em> discovered that sending corrupted tickets caused IIS to return HTTP 200 for valid padding and HTTP 500 for invalid padding.
+            </p>
+            <div class="p-2.5 bg-zinc-900 rounded border border-zinc-800 text-[11px] text-zinc-300 leading-relaxed">
+              <strong>Impact:</strong> Attackers decrypted session cookies, recovered the server's master <code class="font-mono text-white">MachineKey</code>, and downloaded <code class="font-mono text-white">web.config</code> files containing plaintext database passwords, achieving complete server takeover!
+            </div>
+          </div>
+
+          <!-- Case Study 2: Google POODLE Attack -->
+          <div class="p-4 bg-zinc-950 rounded-xl border border-zinc-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-zinc-100 text-sm">Google POODLE Attack</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-700">CVE-2014-3566</span>
+            </div>
+            <p class="text-zinc-400 leading-relaxed">
+              <strong>The Target:</strong> SSL 3.0 transport encryption in web browsers (Internet Explorer, Chrome, Firefox).
+            </p>
+            <p class="text-zinc-400 leading-relaxed">
+              <strong>The Exploit:</strong> Google security engineers <em>Bodo Möller, Thai Duong, and Krzysztof Kotowicz</em> exploited SSL 3.0's ambiguous padding check. A Man-in-the-Middle on public Wi-Fi forced browsers to downgrade to SSL 3.0 and manipulated ciphertext blocks.
+            </p>
+            <div class="p-2.5 bg-zinc-900 rounded border border-zinc-800 text-[11px] text-zinc-300 leading-relaxed">
+              <strong>Impact:</strong> Plaintext session cookies (<code class="font-mono text-white">Cookie: auth_token=...</code>) were extracted byte-by-byte in ~256 requests per byte. This landmark attack forced the entire Internet to officially deprecate SSL 3.0.
+            </div>
+          </div>
+
+          <!-- Case Study 3: Lucky Thirteen -->
+          <div class="p-4 bg-zinc-950 rounded-xl border border-zinc-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-zinc-100 text-sm">Lucky Thirteen Timing Attack</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-700">CVE-2013-0169</span>
+            </div>
+            <p class="text-zinc-400 leading-relaxed">
+              <strong>The Target:</strong> TLS 1.1 and 1.2 CBC cipher suites with MAC-then-Encrypt.
+            </p>
+            <p class="text-zinc-400 leading-relaxed">
+              <strong>The Exploit:</strong> Researchers <em>Nadhem AlFardan</em> and <em>Kenny Paterson</em> proved that even when servers return uniform error messages to prevent padding leaks, verifying padding vs computing HMAC takes slightly different CPU clock cycles.
+            </p>
+            <div class="p-2.5 bg-zinc-900 rounded border border-zinc-800 text-[11px] text-zinc-300 leading-relaxed">
+              <strong>Impact:</strong> Attackers measured a tiny ~13 microsecond timing variance across TLS packets to extract plaintext, proving that "Uniform Error Handling" is insecure and forcing the adoption of Authenticated Encryption (AEAD).
+            </div>
+          </div>
+
+          <!-- Case Study 4: W3C XML Encryption & Sony PS3 -->
+          <div class="p-4 bg-zinc-950 rounded-xl border border-zinc-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-zinc-100 text-sm">W3C XML Encryption & Sony PS3</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-700">CVE-2011-1096</span>
+            </div>
+            <p class="text-zinc-400 leading-relaxed">
+              <strong>The Target:</strong> W3C XML Encryption Standard used in Web Services, banking APIs, and government identity frameworks.
+            </p>
+            <p class="text-zinc-400 leading-relaxed">
+              <strong>The Exploit:</strong> Somorovsky et al. demonstrated that XML decrypters parse decrypted XML after unpadding. If padding failed, a SOAP fault was returned.
+            </p>
+            <div class="p-2.5 bg-zinc-900 rounded border border-zinc-800 text-[11px] text-zinc-300 leading-relaxed">
+              <strong>Impact:</strong> Attackers decrypted sensitive XML data and signatures across enterprise applications. Similarly, Sony PlayStation 3 firmware was reverse-engineered using padding oracle side-channels.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
     </section>
 
 
@@ -697,6 +923,6 @@
   </footer>
 
   <!-- Application Logic JS -->
-  <script src="./static/app.js?v=20261101_final"></script>
+  <script src="./static/app.js?v=20261101_wt"></script>
 </body>
 </html>
