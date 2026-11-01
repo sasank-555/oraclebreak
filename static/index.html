@@ -13,7 +13,7 @@
   <!-- KaTeX for math formatting -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <!-- CryptoJS for 100% Client-Side GitHub Pages Execution -->
+  <!-- CryptoJS for 100% Client-Side Execution -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
   <script src="./static/crypto-engine.js"></script>
   <script>
@@ -21,25 +21,9 @@
       darkMode: 'class',
       theme: {
         extend: {
-          colors: {
-            brand: {
-              50: '#f0fdfa',
-              100: '#ccfbf1',
-              500: '#14b8a6',
-              600: '#0d9488',
-              700: '#0f766e',
-              900: '#134e4a',
-            },
-            cyber: {
-              bg: '#0a0f1d',
-              card: '#111827',
-              border: '#1f2937',
-              accent: '#38bdf8'
-            }
-          },
           fontFamily: {
             mono: ['JetBrains Mono', 'Fira Code', 'Courier New', 'monospace'],
-            sans: ['Inter', 'system-ui', 'sans-serif'],
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
           }
         }
       }
@@ -47,86 +31,83 @@
   </script>
   <style>
     .byte-box {
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.15s ease-in-out;
     }
     .byte-box:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.25);
+      border-color: #71717a;
     }
-    .byte-cracking {
-      animation: pulseGlow 0.8s infinite alternate;
-    }
-    @keyframes pulseGlow {
-      from { border-color: #f59e0b; box-shadow: 0 0 8px rgba(245, 158, 11, 0.4); }
-      to { border-color: #ef4444; box-shadow: 0 0 16px rgba(239, 68, 68, 0.8); }
+    .byte-probing {
+      border-color: #fafafa !important;
+      background-color: #27272a !important;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
     }
     .custom-scrollbar::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
     }
     .custom-scrollbar::-webkit-scrollbar-track {
-      background: #111827;
+      background: #09090b;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #374151;
-      border-radius: 3px;
+      background: #27272a;
+      border-radius: 2px;
     }
   </style>
 </head>
-<body class="bg-[#0b101e] text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-cyan-500 selection:text-black">
+<body class="bg-[#09090b] text-zinc-100 font-sans min-h-screen flex flex-col antialiased selection:bg-zinc-800 selection:text-white">
 
-  <!-- Academic Top Banner & Metadata -->
-  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur sticky top-0 z-50">
+  <!-- Minimalist Academic Top Header -->
+  <header class="border-b border-zinc-800/80 bg-[#09090b]/90 backdrop-blur sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center space-x-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 via-teal-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-          <i data-lucide="shield-alert" class="w-5 h-5 text-white"></i>
+        <div class="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-700/80 flex items-center justify-center text-zinc-200">
+          <i data-lucide="shield" class="w-4 h-4"></i>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="font-bold text-lg text-white tracking-wide flex items-center gap-1.5">
-              <span>Oracle<span class="text-cyan-400">Break</span></span>
-              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-cyan-950/80 text-cyan-300 border border-cyan-800">v1.0-CNS</span>
+            <h1 class="font-semibold text-base text-zinc-100 tracking-tight flex items-center gap-2">
+              <span>OracleBreak</span>
+              <span class="text-[11px] font-mono px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800">v1.0 • CNS</span>
             </h1>
           </div>
-          <p class="text-xs text-slate-400 font-mono hidden sm:block">
+          <p class="text-xs text-zinc-400 font-mono hidden sm:block">
             Experimental Analysis of CBC Padding-Oracle Vulnerabilities & Mitigations
           </p>
         </div>
       </div>
 
-      <!-- Student & Course Details (Vital for high marks!) -->
-      <div class="flex items-center gap-3 text-xs bg-slate-950/80 border border-slate-800 px-3.5 py-2 rounded-lg">
+      <!-- Student & Course Details -->
+      <div class="flex items-center gap-3 text-xs bg-zinc-900/80 border border-zinc-800 px-3.5 py-2 rounded-lg">
         <div class="text-right">
-          <div class="font-semibold text-slate-200">Nasika Sasank <span class="text-cyan-400 font-mono">(23ECB0A03)</span></div>
-          <div class="text-slate-400 text-[11px]">ECE - A &bull; National Institute of Technology Warangal</div>
+          <div class="font-medium text-zinc-200">Nasika Sasank <span class="text-zinc-400 font-mono">(23ECB0A03)</span></div>
+          <div class="text-zinc-500 text-[11px]">ECE - A &bull; National Institute of Technology Warangal</div>
         </div>
-        <div class="h-7 w-[1px] bg-slate-800"></div>
+        <div class="h-6 w-[1px] bg-zinc-800"></div>
         <div class="flex flex-col items-center">
-          <span class="text-[10px] uppercase font-bold tracking-wider text-emerald-400">CNS Lab</span>
-          <span class="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-medium bg-emerald-950 text-emerald-300 border border-emerald-800">Verified</span>
+          <span class="text-[10px] uppercase font-bold tracking-wider text-zinc-300">CNS</span>
+          <span class="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-mono bg-zinc-800 text-zinc-300 border border-zinc-700">Section A</span>
         </div>
       </div>
     </div>
 
     <!-- Navigation Tabs -->
-    <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto custom-scrollbar border-t border-slate-800/80 gap-1 text-sm font-medium">
-      <button onclick="switchTab('exploit')" id="tab-btn-exploit" class="tab-btn px-4 py-2.5 border-b-2 border-cyan-400 text-cyan-400 flex items-center gap-2 whitespace-nowrap">
+    <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto custom-scrollbar border-t border-zinc-800/80 gap-1 text-sm font-medium">
+      <button onclick="switchTab('exploit')" id="tab-btn-exploit" class="tab-btn px-4 py-2.5 border-b-2 border-white text-white flex items-center gap-2 whitespace-nowrap">
         <i data-lucide="terminal" class="w-4 h-4"></i> Cryptanalysis Lab
       </button>
-      <button onclick="switchTab('visualizer')" id="tab-btn-visualizer" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <button onclick="switchTab('visualizer')" id="tab-btn-visualizer" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 flex items-center gap-2 whitespace-nowrap">
         <i data-lucide="blocks" class="w-4 h-4"></i> Block Architecture & PKCS#7
       </button>
-      <button onclick="switchTab('tampering')" id="tab-btn-tampering" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <button onclick="switchTab('tampering')" id="tab-btn-tampering" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 flex items-center gap-2 whitespace-nowrap">
         <i data-lucide="binary" class="w-4 h-4"></i> Ciphertext Malleability
       </button>
-      <button onclick="switchTab('mitigations')" id="tab-btn-mitigations" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <button onclick="switchTab('mitigations')" id="tab-btn-mitigations" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 flex items-center gap-2 whitespace-nowrap">
         <i data-lucide="shield-check" class="w-4 h-4"></i> Defense & Mitigations
       </button>
-      <button onclick="switchTab('tests')" id="tab-btn-tests" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <button onclick="switchTab('tests')" id="tab-btn-tests" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 flex items-center gap-2 whitespace-nowrap">
         <i data-lucide="check-circle-2" class="w-4 h-4"></i> Formal Verification Suite
       </button>
-      <button onclick="switchTab('theory')" id="tab-btn-theory" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-slate-400 hover:text-slate-200 flex items-center gap-2 whitespace-nowrap">
+      <button onclick="switchTab('theory')" id="tab-btn-theory" class="tab-btn px-4 py-2.5 border-b-2 border-transparent text-zinc-400 hover:text-zinc-200 flex items-center gap-2 whitespace-nowrap">
         <i data-lucide="book-open" class="w-4 h-4"></i> Theoretical Foundations
       </button>
     </div>
@@ -141,57 +122,57 @@
     <section id="tab-exploit" class="space-y-6">
       
       <!-- Input & Configuration Card -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl">
+      <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
           <div>
-            <h2 class="text-base font-bold text-white flex items-center gap-2">
-              <i data-lucide="crosshair" class="w-5 h-5 text-cyan-400"></i>
+            <h2 class="text-sm font-semibold text-zinc-100 flex items-center gap-2">
+              <i data-lucide="target" class="w-4 h-4 text-zinc-400"></i>
               Target Ciphertext & Cryptographic Parameters
             </h2>
-            <p class="text-xs text-slate-400">
+            <p class="text-xs text-zinc-400 mt-0.5">
               Configure target plaintext for AES-128-CBC encryption. The 128-bit secret key remains isolated on the remote decryption server.
             </p>
           </div>
           <!-- Presets -->
           <div class="flex items-center gap-2">
-            <span class="text-xs text-slate-400 font-mono">Test Vectors:</span>
-            <button onclick="setPreset('FLAG{NITW_ECB_2026}')" class="px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 font-mono transition">Flag Vector</button>
-            <button onclick="setPreset('Transfer $10000; admin=1')" class="px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 font-mono transition">Transaction</button>
-            <button onclick="setPreset('SessionToken=8f9a2b4e7c')" class="px-2.5 py-1 text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 rounded border border-slate-700 font-mono transition">Auth Token</button>
+            <span class="text-xs text-zinc-500 font-mono">Test Vectors:</span>
+            <button onclick="setPreset('FLAG{NITW_ECB_2026}')" class="px-2.5 py-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded border border-zinc-700 font-mono transition">Flag Vector</button>
+            <button onclick="setPreset('Transfer $10000; admin=1')" class="px-2.5 py-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded border border-zinc-700 font-mono transition">Transaction</button>
+            <button onclick="setPreset('SessionToken=8f9a2b4e7c')" class="px-2.5 py-1 text-xs bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded border border-zinc-700 font-mono transition">Auth Token</button>
           </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
           <div class="md:col-span-3 space-y-1.5">
-            <label class="text-xs font-semibold text-slate-300">Target Plaintext Payload:</label>
+            <label class="text-xs font-medium text-zinc-300">Target Plaintext Payload:</label>
             <div class="relative">
               <input type="text" id="target-plaintext" value="FLAG{NITW_ECB_2026}" 
-                class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2.5 text-sm text-cyan-300 font-mono focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+                class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2.5 text-sm text-zinc-100 font-mono focus:border-zinc-500 focus:outline-none transition">
             </div>
           </div>
           <div>
             <button onclick="generateTargetCiphertext()" id="btn-encrypt"
-              class="w-full bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-500 text-white font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20 transition">
+              class="w-full bg-white text-zinc-950 hover:bg-zinc-200 font-medium py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition text-sm">
               <i data-lucide="lock" class="w-4 h-4"></i> Initialize Ciphertext
             </button>
           </div>
         </div>
 
         <!-- Encryption Output Display -->
-        <div id="target-display" class="mt-4 pt-4 border-t border-slate-800/80 grid grid-cols-1 lg:grid-cols-3 gap-3 text-xs font-mono">
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
-            <div class="text-slate-400 font-sans font-semibold mb-1 flex items-center justify-between">
+        <div id="target-display" class="mt-4 pt-4 border-t border-zinc-800/80 grid grid-cols-1 lg:grid-cols-3 gap-3 text-xs font-mono">
+          <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800">
+            <div class="text-zinc-500 font-sans font-medium mb-1 flex items-center justify-between">
               <span>Initialization Vector (IV - 16 bytes)</span>
-              <span class="text-[10px] text-cyan-400 font-mono">Block 0</span>
+              <span class="text-[10px] text-zinc-400 font-mono">Block 0</span>
             </div>
-            <div id="disp-iv" class="text-cyan-300 break-all">Generating...</div>
+            <div id="disp-iv" class="text-zinc-300 break-all">Generating...</div>
           </div>
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 lg:col-span-2">
-            <div class="text-slate-400 font-sans font-semibold mb-1 flex items-center justify-between">
+          <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800 lg:col-span-2">
+            <div class="text-zinc-500 font-sans font-medium mb-1 flex items-center justify-between">
               <span>Ciphertext Sequence ($C_1 \dots C_n$)</span>
-              <span id="disp-block-count" class="text-[10px] text-emerald-400 font-mono">1 Block (16 bytes)</span>
+              <span id="disp-block-count" class="text-[10px] text-zinc-400 font-mono">1 Block (16 bytes)</span>
             </div>
-            <div id="disp-ct" class="text-emerald-300 break-all">Generating...</div>
+            <div id="disp-ct" class="text-zinc-300 break-all">Generating...</div>
           </div>
         </div>
       </div>
@@ -201,39 +182,39 @@
 
         <!-- Controls Column (Left) -->
         <div class="space-y-4">
-          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl space-y-4">
-            <h3 class="text-sm font-bold text-white flex items-center gap-2">
-              <i data-lucide="cpu" class="w-4 h-4 text-cyan-400"></i> Cryptanalytic Attack Engine
+          <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm space-y-4">
+            <h3 class="text-sm font-semibold text-zinc-100 flex items-center gap-2">
+              <i data-lucide="cpu" class="w-4 h-4 text-zinc-400"></i> Cryptanalytic Attack Engine
             </h3>
 
             <!-- Mode Selector -->
-            <div class="bg-slate-950 p-1.5 rounded-lg border border-slate-800 grid grid-cols-2 gap-1 text-xs font-semibold">
-              <button onclick="setAttackMode('auto')" id="mode-btn-auto" class="py-2 rounded-md bg-cyan-600 text-white transition flex items-center justify-center gap-1.5">
-                <i data-lucide="play" class="w-3.5 h-3.5"></i> Automated Execution
+            <div class="bg-zinc-950 p-1 rounded-lg border border-zinc-800 grid grid-cols-2 gap-1 text-xs font-medium">
+              <button onclick="setAttackMode('auto')" id="mode-btn-auto" class="py-2 rounded-md bg-zinc-100 text-zinc-950 font-semibold transition flex items-center justify-center gap-1.5">
+                <i data-lucide="play" class="w-3.5 h-3.5"></i> Automated
               </button>
-              <button onclick="setAttackMode('step')" id="mode-btn-step" class="py-2 rounded-md text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
-                <i data-lucide="user-check" class="w-3.5 h-3.5"></i> Step-by-Step Analysis
+              <button onclick="setAttackMode('step')" id="mode-btn-step" class="py-2 rounded-md text-zinc-400 hover:text-zinc-200 transition flex items-center justify-center gap-1.5">
+                <i data-lucide="user-check" class="w-3.5 h-3.5"></i> Step-by-Step
               </button>
             </div>
 
             <!-- Auto Mode Controls -->
             <div id="controls-auto" class="space-y-3">
               <div class="space-y-1">
-                <div class="flex justify-between text-xs text-slate-400">
-                  <span>Cryptanalysis Stepping Delay:</span>
-                  <span id="speed-label" class="text-cyan-400 font-mono">Normal (30ms)</span>
+                <div class="flex justify-between text-xs text-zinc-400">
+                  <span>Stepping Delay:</span>
+                  <span id="speed-label" class="text-zinc-300 font-mono">Normal (30ms)</span>
                 </div>
                 <input type="range" id="speed-slider" min="1" max="100" value="40" 
-                  class="w-full accent-cyan-500 bg-slate-800 h-2 rounded cursor-pointer" oninput="updateSpeedLabel()">
+                  class="w-full accent-zinc-200 bg-zinc-800 h-1.5 rounded cursor-pointer" oninput="updateSpeedLabel()">
               </div>
 
               <div class="flex gap-2">
                 <button onclick="startAutoAttack()" id="btn-start-auto"
-                  class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-2.5 rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 transition">
+                  class="flex-1 bg-white text-zinc-950 hover:bg-zinc-200 font-medium py-2.5 rounded-lg flex items-center justify-center gap-2 transition text-sm">
                   <i data-lucide="play" class="w-4 h-4"></i> Execute Cryptanalysis
                 </button>
                 <button onclick="stopAutoAttack()" id="btn-stop-auto" disabled
-                  class="bg-slate-800 hover:bg-rose-950 hover:text-rose-400 text-slate-400 px-3 py-2.5 rounded-lg border border-slate-700 transition">
+                  class="bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white px-3 py-2.5 rounded-lg border border-zinc-800 transition">
                   <i data-lucide="square" class="w-4 h-4"></i>
                 </button>
               </div>
@@ -241,63 +222,63 @@
 
             <!-- Step-by-Step Manual Controls -->
             <div id="controls-step" class="space-y-3 hidden">
-              <div class="p-3 bg-cyan-950/40 border border-cyan-800/60 rounded-lg text-xs text-cyan-200">
-                <p class="font-semibold mb-1">🔬 Interactive Analytical Mode:</p>
-                Execute targeted candidate byte queries, verify oracle responses, and evaluate intermediate state algebraic derivations in real time.
+              <div class="p-3 bg-zinc-950 border border-zinc-800 rounded-lg text-xs text-zinc-300">
+                <p class="font-medium text-zinc-200 mb-1">Analytical Step Mode:</p>
+                Probe candidate bytes individually, evaluate oracle validation status, and observe intermediate state calculations in real time.
               </div>
 
               <div class="grid grid-cols-2 gap-2 text-xs font-mono">
-                <div class="bg-slate-950 p-2.5 rounded border border-slate-800">
-                  <span class="text-slate-400 block text-[10px] uppercase font-sans">Target Byte Position</span>
-                  <span id="step-byte-pos" class="text-amber-400 text-sm font-bold">15 (Byte 15)</span>
+                <div class="bg-zinc-950 p-2.5 rounded border border-zinc-800">
+                  <span class="text-zinc-500 block text-[10px] uppercase font-sans">Target Position</span>
+                  <span id="step-byte-pos" class="text-zinc-100 text-sm font-bold">15 (Byte 15)</span>
                 </div>
-                <div class="bg-slate-950 p-2.5 rounded border border-slate-800">
-                  <span class="text-slate-400 block text-[10px] uppercase font-sans">Target Padding Invariant</span>
-                  <span id="step-target-pad" class="text-cyan-400 text-sm font-bold">0x01</span>
+                <div class="bg-zinc-950 p-2.5 rounded border border-zinc-800">
+                  <span class="text-zinc-500 block text-[10px] uppercase font-sans">Target Padding</span>
+                  <span id="step-target-pad" class="text-zinc-100 text-sm font-bold">0x01</span>
                 </div>
               </div>
 
               <div class="flex gap-2">
                 <button onclick="crackNextByteStep()" id="btn-step-next"
-                  class="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-semibold py-2.5 rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-cyan-600/20 transition">
+                  class="w-full bg-white text-zinc-950 hover:bg-zinc-200 font-medium py-2.5 rounded-lg flex items-center justify-center gap-2 transition text-sm">
                   <i data-lucide="step-forward" class="w-4 h-4"></i> Probe Next Candidate Byte
                 </button>
               </div>
             </div>
 
             <!-- Metrics Card -->
-            <div class="bg-slate-950 p-3.5 rounded-lg border border-slate-800 space-y-2 font-mono text-xs">
-              <div class="flex justify-between items-center text-slate-400">
+            <div class="bg-zinc-950 p-3.5 rounded-lg border border-zinc-800 space-y-2 font-mono text-xs">
+              <div class="flex justify-between items-center text-zinc-400">
                 <span>Oracle Queries:</span>
-                <span id="metric-queries" class="text-cyan-400 font-bold text-sm">0</span>
+                <span id="metric-queries" class="text-zinc-100 font-bold text-sm">0</span>
               </div>
-              <div class="flex justify-between items-center text-slate-400">
+              <div class="flex justify-between items-center text-zinc-400">
                 <span>Avg Queries / Byte:</span>
-                <span id="metric-avg-queries" class="text-slate-200">0.0 / 256</span>
+                <span id="metric-avg-queries" class="text-zinc-300">0.0 / 256</span>
               </div>
-              <div class="flex justify-between items-center text-slate-400">
-                <span>Theoretical Brute-Force:</span>
-                <span class="text-rose-400 font-semibold">2^128 queries</span>
+              <div class="flex justify-between items-center text-zinc-400">
+                <span>Brute-Force Space:</span>
+                <span class="text-zinc-400">2^128 queries</span>
               </div>
-              <div class="flex justify-between items-center text-slate-400">
-                <span>Padding Oracle Speedup:</span>
-                <span class="text-emerald-400 font-bold">~10^36x Faster!</span>
+              <div class="flex justify-between items-center text-zinc-400">
+                <span>Oracle Speedup:</span>
+                <span class="text-zinc-200 font-semibold">~10^36x Faster</span>
               </div>
             </div>
 
           </div>
 
           <!-- Formula Explainer Box -->
-          <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-xl text-xs space-y-2">
-            <h4 class="font-bold text-slate-200 flex items-center gap-1.5">
-              <i data-lucide="calculator" class="w-3.5 h-3.5 text-cyan-400"></i> Active Mathematical Formulas
+          <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 shadow-sm text-xs space-y-2">
+            <h4 class="font-medium text-zinc-200 flex items-center gap-1.5">
+              <i data-lucide="calculator" class="w-3.5 h-3.5 text-zinc-400"></i> Active Mathematical Formulas
             </h4>
-            <div class="bg-slate-950 p-2.5 rounded border border-slate-800 font-mono text-[11px] text-cyan-300 space-y-1">
+            <div class="bg-zinc-950 p-2.5 rounded border border-zinc-800 font-mono text-[11px] text-zinc-300 space-y-1">
               <div id="math-intermediate">I[k] = C'[k] ^ pad</div>
               <div id="math-plaintext">P[k] = I[k] ^ C_{prev}[k]</div>
             </div>
-            <p class="text-[11px] text-slate-400">
-              When the oracle returns <span class="text-emerald-400 font-semibold">200 Valid</span>, the intermediate state is uniquely solved without ever knowing the AES key!
+            <p class="text-[11px] text-zinc-400 leading-relaxed">
+              When the oracle signals 200 Valid Padding, the intermediate state is uniquely derived without private key exposure.
             </p>
           </div>
         </div>
@@ -306,31 +287,31 @@
         <div class="lg:col-span-2 space-y-4">
           
           <!-- Live Decrypted Text Banner -->
-          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl">
+          <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm">
             <div class="flex items-center justify-between mb-2">
-              <span class="text-xs font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                <i data-lucide="unlock" class="w-4 h-4 text-emerald-400"></i> Recovered Plaintext Stream
+              <span class="text-xs font-medium text-zinc-300 uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="unlock" class="w-4 h-4 text-zinc-400"></i> Recovered Plaintext Stream
               </span>
-              <span id="attack-status-badge" class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-slate-400 border border-slate-700">
+              <span id="attack-status-badge" class="px-2 py-0.5 rounded text-[11px] font-mono bg-zinc-800 text-zinc-400 border border-zinc-700">
                 Idle / Ready
               </span>
             </div>
-            <div id="recovered-stream" class="w-full min-h-[52px] bg-slate-950 rounded-lg border border-slate-800 p-3 font-mono text-base text-emerald-400 tracking-wide break-all flex items-center">
-              <span class="text-slate-600 italic text-sm">Click "Run Auto Attack" or "Crack Next Byte" to begin decryption...</span>
+            <div id="recovered-stream" class="w-full min-h-[52px] bg-zinc-950 rounded-lg border border-zinc-800 p-3 font-mono text-base text-zinc-100 tracking-wide break-all flex items-center">
+              <span class="text-zinc-600 italic text-sm">Click "Execute Cryptanalysis" or "Probe Next Candidate Byte" to begin decryption...</span>
             </div>
           </div>
 
           <!-- 16-Byte Block Matrix Grid Visualizer -->
-          <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl space-y-4">
+          <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                <i data-lucide="layout-grid" class="w-4 h-4 text-cyan-400"></i> 
+              <h3 class="text-sm font-semibold text-zinc-100 flex items-center gap-2">
+                <i data-lucide="layout-grid" class="w-4 h-4 text-zinc-400"></i> 
                 Active 16-Byte Block Inspection Matrix
               </h3>
-              <div class="flex items-center gap-3 text-[11px]">
-                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-700"></span> Pending</span>
-                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse"></span> Testing</span>
-                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Decrypted</span>
+              <div class="flex items-center gap-3 text-[11px] text-zinc-400">
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-zinc-700"></span> Pending</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-zinc-300"></span> Probing</span>
+                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-white"></span> Decrypted</span>
               </div>
             </div>
 
@@ -340,33 +321,33 @@
             </div>
 
             <!-- Interactive Inspector Details Table -->
-            <div class="border-t border-slate-800 pt-3">
-              <h4 class="text-xs font-bold text-slate-300 mb-2">Selected Byte Cryptographic Registers</h4>
+            <div class="border-t border-zinc-800/80 pt-3">
+              <h4 class="text-xs font-medium text-zinc-300 mb-2">Selected Byte Cryptographic Registers</h4>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
-                <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                  <span class="text-[10px] text-slate-500 block">Candidate Guess ($C'$)</span>
-                  <span id="inspect-candidate" class="text-amber-400 font-bold">--</span>
+                <div class="bg-zinc-950 p-2 rounded border border-zinc-800">
+                  <span class="text-[10px] text-zinc-500 block">Candidate Guess ($C'$)</span>
+                  <span id="inspect-candidate" class="text-zinc-200 font-bold">--</span>
                 </div>
-                <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                  <span class="text-[10px] text-slate-500 block">Target Padding</span>
-                  <span id="inspect-pad" class="text-cyan-400 font-bold">--</span>
+                <div class="bg-zinc-950 p-2 rounded border border-zinc-800">
+                  <span class="text-[10px] text-zinc-500 block">Target Padding</span>
+                  <span id="inspect-pad" class="text-zinc-200 font-bold">--</span>
                 </div>
-                <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                  <span class="text-[10px] text-slate-500 block">Intermediate ($I = C' \oplus pad$)</span>
-                  <span id="inspect-inter" class="text-indigo-400 font-bold">--</span>
+                <div class="bg-zinc-950 p-2 rounded border border-zinc-800">
+                  <span class="text-[10px] text-zinc-500 block">Intermediate ($I = C' \oplus pad$)</span>
+                  <span id="inspect-inter" class="text-zinc-200 font-bold">--</span>
                 </div>
-                <div class="bg-slate-950 p-2 rounded border border-slate-800">
-                  <span class="text-[10px] text-slate-500 block">Recovered ($P = I \oplus C_{orig}$)</span>
-                  <span id="inspect-plain" class="text-emerald-400 font-bold">--</span>
+                <div class="bg-zinc-950 p-2 rounded border border-zinc-800">
+                  <span class="text-[10px] text-zinc-500 block">Recovered ($P = I \oplus C_{orig}$)</span>
+                  <span id="inspect-plain" class="text-zinc-100 font-bold">--</span>
                 </div>
               </div>
             </div>
 
             <!-- Live Oracle Query Feed -->
-            <div class="border-t border-slate-800 pt-3 space-y-1.5">
-              <span class="text-xs font-bold text-slate-300">Live Oracle Network Wire:</span>
-              <div id="oracle-wire-log" class="bg-slate-950 rounded-lg p-2.5 h-28 overflow-y-auto custom-scrollbar font-mono text-[11px] space-y-1 text-slate-400">
-                <div class="text-slate-600">// Oracle server listener ready on port 8000. Awaiting query packets...</div>
+            <div class="border-t border-zinc-800/80 pt-3 space-y-1.5">
+              <span class="text-xs font-medium text-zinc-300">Oracle Decryption Telemetry Stream:</span>
+              <div id="oracle-wire-log" class="bg-zinc-950 rounded-lg p-2.5 h-28 overflow-y-auto custom-scrollbar font-mono text-[11px] space-y-1 text-zinc-400">
+                <div class="text-zinc-600">// Oracle telemetry listener initialized. Awaiting query packets...</div>
               </div>
             </div>
 
@@ -382,21 +363,21 @@
     <!-- TAB 2: BLOCK ARCHITECTURE & PKCS#7 SPECIFICATION         -->
     <!-- ======================================================== -->
     <section id="tab-visualizer" class="space-y-6 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl space-y-4">
+      <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm space-y-4">
         <div>
-          <h2 class="text-base font-bold text-white flex items-center gap-2">
-            <i data-lucide="blocks" class="w-5 h-5 text-cyan-400"></i>
+          <h2 class="text-sm font-semibold text-zinc-100 flex items-center gap-2">
+            <i data-lucide="blocks" class="w-4 h-4 text-zinc-400"></i>
             Block Chaining Topology & PKCS#7 Padding Specification
           </h2>
-          <p class="text-xs text-slate-400">
+          <p class="text-xs text-zinc-400 mt-0.5">
             Structural visualization demonstrating RFC 5652 PKCS#7 boundary alignment and inter-block CBC chaining dynamics.
           </p>
         </div>
 
         <div class="space-y-2">
-          <label class="text-xs font-semibold text-slate-300">Live Payload Boundary Evaluation Sandbox:</label>
+          <label class="text-xs font-medium text-zinc-300">Live Payload Boundary Evaluation Sandbox:</label>
           <input type="text" id="vis-input" value="Hello NIT Warangal!" oninput="updateVisualizer()"
-            class="w-full bg-slate-950 border border-slate-700 rounded-lg px-4 py-2 text-sm text-cyan-300 font-mono focus:ring-2 focus:ring-cyan-500 focus:outline-none">
+            class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-2 text-sm text-zinc-100 font-mono focus:border-zinc-500 focus:outline-none transition">
         </div>
 
         <div id="vis-blocks-container" class="space-y-4 pt-2">
@@ -404,32 +385,32 @@
         </div>
 
         <!-- CBC Decryption Flow Architecture Diagram -->
-        <div class="border-t border-slate-800 pt-5 space-y-3">
-          <h3 class="text-sm font-bold text-white flex items-center gap-2">
-            <i data-lucide="git-merge" class="w-4 h-4 text-indigo-400"></i>
+        <div class="border-t border-zinc-800/80 pt-5 space-y-3">
+          <h3 class="text-sm font-medium text-zinc-200 flex items-center gap-2">
+            <i data-lucide="git-merge" class="w-4 h-4 text-zinc-400"></i>
             CBC Decryption Data Flow & Mathematical Coupling
           </h3>
-          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 font-mono text-xs space-y-4">
+          <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 font-mono text-xs space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-              <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
-                <span class="text-[10px] text-slate-500 block uppercase">Step 1: Block Decryption</span>
-                <span class="text-cyan-400 font-bold block my-1">AES_Decrypt(K, C_i)</span>
-                <span class="text-slate-400 text-[11px]">= Intermediate State $I_i$</span>
+              <div class="p-3 bg-zinc-900 rounded-lg border border-zinc-800">
+                <span class="text-[10px] text-zinc-500 block uppercase font-sans">Step 1: Block Decryption</span>
+                <span class="text-zinc-100 font-bold block my-1">AES_Decrypt(K, C_i)</span>
+                <span class="text-zinc-400 text-[11px]">= Intermediate State $I_i$</span>
               </div>
-              <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
-                <span class="text-[10px] text-slate-500 block uppercase">Step 2: Chaining XOR</span>
-                <span class="text-amber-400 font-bold block my-1">I_i XOR C_{i-1}</span>
-                <span class="text-slate-400 text-[11px]">Previous ciphertext modifies plaintext</span>
+              <div class="p-3 bg-zinc-900 rounded-lg border border-zinc-800">
+                <span class="text-[10px] text-zinc-500 block uppercase font-sans">Step 2: Chaining XOR</span>
+                <span class="text-zinc-100 font-bold block my-1">I_i XOR C_{i-1}</span>
+                <span class="text-zinc-400 text-[11px]">Previous ciphertext alters plaintext</span>
               </div>
-              <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
-                <span class="text-[10px] text-slate-500 block uppercase">Step 3: Plaintext & Pad</span>
-                <span class="text-emerald-400 font-bold block my-1">P_i (Padded)</span>
-                <span class="text-slate-400 text-[11px]">Unpad PKCS#7 to reveal message</span>
+              <div class="p-3 bg-zinc-900 rounded-lg border border-zinc-800">
+                <span class="text-[10px] text-zinc-500 block uppercase font-sans">Step 3: Plaintext & Pad</span>
+                <span class="text-zinc-100 font-bold block my-1">P_i (Padded)</span>
+                <span class="text-zinc-400 text-[11px]">Unpad PKCS#7 to reveal message</span>
               </div>
             </div>
 
-            <div class="p-3 bg-rose-950/30 border border-rose-800/50 rounded-lg text-rose-200 text-xs">
-              <strong>Architectural Vulnerability:</strong> Because an adversary directly controls $C_{i-1}$, any modification to $C_{i-1}[k]$ induces an exact, deterministic bitwise transformation in decrypted $P_i[k]$. When a decryption service distinguishes padding validation outcomes from cryptographic failures, it operates as a linear equation solver for the intermediate state.
+            <div class="p-3 bg-zinc-900 border border-zinc-700 rounded-lg text-zinc-300 text-xs leading-relaxed font-sans">
+              <strong class="text-white">Architectural Vulnerability:</strong> Because an adversary directly controls $C_{i-1}$, any modification to $C_{i-1}[k]$ induces an exact, deterministic bitwise transformation in decrypted $P_i[k]$. When a decryption service distinguishes padding validation outcomes from cryptographic failures, it operates as a linear equation solver for the intermediate state.
             </div>
           </div>
         </div>
@@ -442,58 +423,58 @@
     <!-- TAB 3: CIPHERTEXT MALLEABILITY & INTEGRITY ANALYSIS      -->
     <!-- ======================================================== -->
     <section id="tab-tampering" class="space-y-6 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl space-y-4">
+      <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm space-y-4">
         <div>
-          <h2 class="text-base font-bold text-white flex items-center gap-2">
-            <i data-lucide="binary" class="w-5 h-5 text-cyan-400"></i>
+          <h2 class="text-sm font-semibold text-zinc-100 flex items-center gap-2">
+            <i data-lucide="binary" class="w-4 h-4 text-zinc-400"></i>
             CBC Ciphertext Malleability & Integrity Verification
           </h2>
-          <p class="text-xs text-slate-400">
+          <p class="text-xs text-zinc-400 mt-0.5">
             Experimental analysis demonstrating CBC non-malleability failure and deterministic plaintext modification without cryptographic key exposure.
           </p>
         </div>
 
-        <div class="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-4">
+        <div class="p-4 bg-zinc-950 rounded-xl border border-zinc-800 space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
             <div>
-              <label class="text-slate-400 block mb-1 font-sans">Simulated Token Format:</label>
+              <label class="text-zinc-400 block mb-1 font-sans">Simulated Token Format:</label>
               <input type="text" id="tamper-token-input" value="user=bob;admin=0" disabled
-                class="w-full bg-slate-900 border border-slate-800 rounded p-2 text-slate-300">
+                class="w-full bg-zinc-900 border border-zinc-800 rounded p-2 text-zinc-300">
             </div>
             <div>
-              <label class="text-slate-400 block mb-1 font-sans">Target Character Transformation:</label>
+              <label class="text-zinc-400 block mb-1 font-sans">Target Character Transformation:</label>
               <div class="flex gap-2">
                 <input type="text" id="tamper-orig-char" value="0" maxlength="1" disabled
-                  class="w-16 bg-slate-900 border border-slate-800 rounded p-2 text-center text-amber-400 font-bold">
-                <span class="self-center text-slate-500">&rarr;</span>
+                  class="w-16 bg-zinc-900 border border-zinc-800 rounded p-2 text-center text-zinc-400 font-bold">
+                <span class="self-center text-zinc-500">&rarr;</span>
                 <input type="text" id="tamper-dest-char" value="1" maxlength="1"
-                  class="w-16 bg-slate-900 border border-cyan-700 rounded p-2 text-center text-emerald-400 font-bold focus:outline-none">
+                  class="w-16 bg-zinc-900 border border-zinc-700 rounded p-2 text-center text-white font-bold focus:outline-none">
               </div>
             </div>
             <div class="flex items-end">
               <button onclick="executeBitFlip()"
-                class="w-full bg-amber-600 hover:bg-amber-500 text-white font-semibold py-2 px-4 rounded-lg flex items-center justify-center gap-2 shadow-lg shadow-amber-600/20 transition">
-                <i data-lucide="zap" class="w-4 h-4"></i> Execute Bit-Flip Transformation
+                class="w-full bg-white text-zinc-950 hover:bg-zinc-200 font-medium py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition text-xs">
+                <i data-lucide="zap" class="w-3.5 h-3.5"></i> Execute Bit-Flip Transformation
               </button>
             </div>
           </div>
 
-          <div id="tamper-result-box" class="pt-4 border-t border-slate-800/80 space-y-3">
-            <h4 class="text-xs font-bold text-slate-300">Decryption Service Output Verification:</h4>
+          <div id="tamper-result-box" class="pt-4 border-t border-zinc-800/80 space-y-3">
+            <h4 class="text-xs font-medium text-zinc-300">Decryption Service Output Verification:</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-              <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
-                <span class="text-slate-500 text-[10px] block">Original Ciphertext Decrypt:</span>
-                <span class="text-slate-300 block my-1">"user=bob;admin=0"</span>
-                <span class="px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-400">Unprivileged User Scope</span>
+              <div class="p-3 bg-zinc-900 rounded-lg border border-zinc-800">
+                <span class="text-zinc-500 text-[10px] block">Original Ciphertext Decrypt:</span>
+                <span class="text-zinc-300 block my-1">"user=bob;admin=0"</span>
+                <span class="px-2 py-0.5 rounded text-[10px] bg-zinc-800 text-zinc-400 border border-zinc-700">Unprivileged User Scope</span>
               </div>
-              <div class="p-3 bg-slate-900 rounded-lg border border-emerald-800/50">
-                <span class="text-slate-500 text-[10px] block">Tampered Ciphertext Decrypt:</span>
-                <span id="tampered-decrypt-text" class="text-emerald-400 font-bold block my-1">"user=bob;admin=1"</span>
-                <span class="px-2 py-0.5 rounded text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800">Privilege State Injected!</span>
+              <div class="p-3 bg-zinc-900 rounded-lg border border-zinc-700">
+                <span class="text-zinc-500 text-[10px] block">Tampered Ciphertext Decrypt:</span>
+                <span id="tampered-decrypt-text" class="text-white font-bold block my-1">"user=bob;admin=1"</span>
+                <span class="px-2 py-0.5 rounded text-[10px] bg-zinc-800 text-zinc-200 border border-zinc-600">Privilege State Injected</span>
               </div>
             </div>
-            <div id="tamper-math-explanation" class="text-xs text-slate-400 bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-              The adversary inverts bit 0 of IV byte 15 with algebraic difference: <code class="text-cyan-400">0x30 ^ 0x31 = 0x01</code>. When CBC decryption executes <code class="text-cyan-400">D(C_1) ^ IV'</code>, the target character shifts deterministically to '1'.
+            <div id="tamper-math-explanation" class="text-xs text-zinc-400 bg-zinc-900 p-3 rounded-lg border border-zinc-800 leading-relaxed font-sans">
+              The adversary inverts bit 0 of IV byte 15 with algebraic difference: <code class="text-zinc-200 font-mono">0x30 ^ 0x31 = 0x01</code>. When CBC decryption executes <code class="text-zinc-200 font-mono">D(C_1) ^ IV'</code>, the target character shifts deterministically to '1'.
             </div>
           </div>
         </div>
@@ -505,20 +486,20 @@
     <!-- TAB 4: COMPARATIVE DEFENSE & MITIGATION ANALYSIS         -->
     <!-- ======================================================== -->
     <section id="tab-mitigations" class="space-y-6 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl space-y-5">
+      <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 class="text-base font-bold text-white flex items-center gap-2">
-              <i data-lucide="shield-check" class="w-5 h-5 text-emerald-400"></i>
+            <h2 class="text-sm font-semibold text-zinc-100 flex items-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4 text-zinc-400"></i>
               Comparative Cryptographic Mitigations & Security Benchmarks
             </h2>
-            <p class="text-xs text-slate-400">
+            <p class="text-xs text-zinc-400 mt-0.5">
               Empirical evaluation of vulnerable CBC against Uniform Error Handling, Encrypt-then-MAC (RFC 7366), and Galois/Counter Mode AEAD (NIST SP 800-38D).
             </p>
           </div>
           <button onclick="runLiveBenchmark()" id="btn-bench"
-            class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 px-4 rounded-lg flex items-center gap-2 shadow-lg shadow-indigo-600/20 text-xs transition">
-            <i data-lucide="activity" class="w-4 h-4"></i> Run Benchmark Analysis
+            class="bg-white text-zinc-950 hover:bg-zinc-200 font-medium py-2 px-4 rounded-lg flex items-center gap-2 text-xs transition">
+            <i data-lucide="activity" class="w-3.5 h-3.5"></i> Run Benchmark Analysis
           </button>
         </div>
 
@@ -526,7 +507,7 @@
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs border-collapse">
             <thead>
-              <tr class="bg-slate-950 border-b border-slate-800 text-slate-400 font-mono">
+              <tr class="bg-zinc-950 border-b border-zinc-800 text-zinc-400 font-mono">
                 <th class="p-3">Cryptographic Primitive</th>
                 <th class="p-3">Security Level</th>
                 <th class="p-3">Padding Oracle?</th>
@@ -535,16 +516,16 @@
                 <th class="p-3">Standardization Status</th>
               </tr>
             </thead>
-            <tbody id="benchmark-table-body" class="divide-y divide-slate-800">
+            <tbody id="benchmark-table-body" class="divide-y divide-zinc-800">
               <!-- Rendered via JS -->
             </tbody>
           </table>
         </div>
 
         <!-- Chart.js Benchmark Graph -->
-        <div class="bg-slate-950 p-4 rounded-xl border border-slate-800">
-          <h4 class="text-xs font-bold text-slate-300 mb-3 flex items-center gap-2">
-            <i data-lucide="bar-chart-3" class="w-4 h-4 text-cyan-400"></i>
+        <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800">
+          <h4 class="text-xs font-medium text-zinc-300 mb-3 flex items-center gap-2">
+            <i data-lucide="bar-chart-3" class="w-3.5 h-3.5 text-zinc-400"></i>
             Oracle Query Complexity to Decrypt 1 Block (Lower is more secure against oracle attack)
           </h4>
           <div class="h-64">
@@ -559,27 +540,27 @@
     <!-- TAB 5: FORMAL SECURITY VERIFICATION SUITE                -->
     <!-- ======================================================== -->
     <section id="tab-tests" class="space-y-6 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-xl space-y-4">
+      <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-5 shadow-sm space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 class="text-base font-bold text-white flex items-center gap-2">
-              <i data-lucide="check-circle-2" class="w-5 h-5 text-cyan-400"></i>
+            <h2 class="text-sm font-semibold text-zinc-100 flex items-center gap-2">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-zinc-400"></i>
               Formal Cryptographic Verification & Automated Test Suite
             </h2>
-            <p class="text-xs text-slate-400">
+            <p class="text-xs text-zinc-400 mt-0.5">
               Automated unit and boundary verification validating RFC 5652 compliance, differential oracle detection, and AEAD tampering rejection.
             </p>
           </div>
           <button onclick="runVerificationSuite()" id="btn-run-tests"
-            class="bg-cyan-600 hover:bg-cyan-500 text-white font-medium py-2 px-4 rounded-lg flex items-center gap-2 shadow-lg shadow-cyan-600/20 text-xs transition">
-            <i data-lucide="play" class="w-4 h-4"></i> Execute Verification Suite
+            class="bg-white text-zinc-950 hover:bg-zinc-200 font-medium py-2 px-4 rounded-lg flex items-center gap-2 text-xs transition">
+            <i data-lucide="play" class="w-3.5 h-3.5"></i> Execute Verification Suite
           </button>
         </div>
 
         <!-- Test Results Summary -->
-        <div id="test-summary-bar" class="p-3 bg-slate-950 rounded-lg border border-slate-800 flex justify-between items-center text-xs font-mono">
-          <span class="text-slate-400">Status: <strong id="test-all-status" class="text-emerald-400 font-bold">Ready to run</strong></span>
-          <span class="text-slate-400">Duration: <strong id="test-duration" class="text-cyan-400 font-bold">0.0 ms</strong></span>
+        <div id="test-summary-bar" class="p-3 bg-zinc-950 rounded-lg border border-zinc-800 flex justify-between items-center text-xs font-mono">
+          <span class="text-zinc-400">Status: <strong id="test-all-status" class="text-zinc-100 font-bold">Ready to run</strong></span>
+          <span class="text-zinc-400">Duration: <strong id="test-duration" class="text-zinc-100 font-bold">0.0 ms</strong></span>
         </div>
 
         <!-- Test List Items -->
@@ -594,27 +575,27 @@
     <!-- TAB 6: THEORETICAL FOUNDATIONS & ARCHITECTURAL REFERENCE -->
     <!-- ======================================================== -->
     <section id="tab-theory" class="space-y-6 hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl space-y-6 text-sm text-slate-300 leading-relaxed">
+      <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-6 shadow-sm space-y-6 text-sm text-zinc-300 leading-relaxed">
         
         <div>
-          <h2 class="text-lg font-bold text-white flex items-center gap-2 mb-1">
-            <i data-lucide="book-open" class="w-5 h-5 text-cyan-400"></i>
+          <h2 class="text-base font-semibold text-zinc-100 flex items-center gap-2 mb-1">
+            <i data-lucide="book-open" class="w-4 h-4 text-zinc-400"></i>
             Theoretical Foundations & Mathematical Formulation
           </h2>
-          <p class="text-xs text-slate-400">
+          <p class="text-xs text-zinc-500">
             CNS Research Analysis &bull; Nasika Sasank (23ECB0A03) &bull; National Institute of Technology Warangal
           </p>
         </div>
 
         <!-- Section 1: CBC Mathematical Formulation -->
         <div class="space-y-3">
-          <h3 class="text-base font-semibold text-white border-b border-slate-800 pb-1">
+          <h3 class="text-sm font-semibold text-zinc-100 border-b border-zinc-800 pb-1">
             1. Cipher Block Chaining (CBC) Mathematical Formulation & Decryption Primitive
           </h3>
           <p>
             In Cipher Block Chaining (CBC) mode, each plaintext block $P_i$ is XORed with the preceding ciphertext block $C_{i-1}$ prior to block cipher transformation:
           </p>
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-cyan-300 text-xs">
+          <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800 font-mono text-zinc-200 text-xs">
             Encryption Primitive:  C_i = E_K(P_i XOR C_{i-1})  [with C_0 = IV]<br>
             Decryption Primitive:  P_i = D_K(C_i) XOR C_{i-1}
           </div>
@@ -625,7 +606,7 @@
 
         <!-- Section 2: Vaudenay's Padding Oracle Mechanism -->
         <div class="space-y-3">
-          <h3 class="text-base font-semibold text-white border-b border-slate-800 pb-1">
+          <h3 class="text-sm font-semibold text-zinc-100 border-b border-zinc-800 pb-1">
             2. Vaudenay's Differential Padding-Oracle Theorem (EUROCRYPT 2002)
           </h3>
           <p>
@@ -634,7 +615,7 @@
           <p>
             To recover byte index $k$ (evaluated from 15 down to 0), target padding is established as $\text{pad} = 16 - k$. A crafted block $C'_{i-1}$ is presented:
           </p>
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-amber-300 text-xs space-y-1">
+          <div class="bg-zinc-950 p-3 rounded-lg border border-zinc-800 font-mono text-zinc-200 text-xs space-y-1">
             For established indices j > k:  C'_{i-1}[j] = I_i[j] XOR pad<br>
             For target candidate index k:   C'_{i-1}[k] = g in [0, 255]<br>
             Upon Oracle Affirmation (Valid Padding 200 OK):<br>
@@ -645,20 +626,20 @@
 
         <!-- Section 3: Complexity Analysis -->
         <div class="space-y-3">
-          <h3 class="text-base font-semibold text-white border-b border-slate-800 pb-1">
+          <h3 class="text-sm font-semibold text-zinc-100 border-b border-zinc-800 pb-1">
             3. Computational Complexity: Exhaustive Search vs. Differential Oracle Derivation
           </h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="bg-slate-950 p-3.5 rounded-lg border border-rose-900/40 text-xs">
-              <span class="font-bold text-rose-400 block mb-1">Exhaustive Key Space Search:</span>
-              <p class="text-slate-400">
+            <div class="bg-zinc-950 p-3.5 rounded-lg border border-zinc-800 text-xs">
+              <span class="font-bold text-zinc-200 block mb-1">Exhaustive Key Space Search:</span>
+              <p class="text-zinc-400">
                 Complexity: $\mathcal{O}(2^{128})$ operations.<br>
                 Computational infeasibility: Exceeds $10^{20}$ years across distributed computing grids.
               </p>
             </div>
-            <div class="bg-slate-950 p-3.5 rounded-lg border border-emerald-900/40 text-xs">
-              <span class="font-bold text-emerald-400 block mb-1">Differential Padding-Oracle Derivation:</span>
-              <p class="text-slate-400">
+            <div class="bg-zinc-950 p-3.5 rounded-lg border border-zinc-800 text-xs">
+              <span class="font-bold text-zinc-100 block mb-1">Differential Padding-Oracle Derivation:</span>
+              <p class="text-zinc-400">
                 Complexity: $\mathcal{O}(256 \times L)$ oracle queries for $L$-byte ciphertext.<br>
                 Empirical requirement: $\approx 128 \times 16 = 2048$ queries per block (sub-second execution).
               </p>
@@ -668,25 +649,25 @@
 
         <!-- Section 4: Critical Architectural Defense Analysis -->
         <div class="space-y-3">
-          <h3 class="text-base font-semibold text-white border-b border-slate-800 pb-1">
+          <h3 class="text-sm font-semibold text-zinc-100 border-b border-zinc-800 pb-1">
             4. Critical Architectural Defense Analysis & Technical Invariants
           </h3>
           <div class="space-y-3 text-xs">
-            <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-1">
-              <strong class="text-cyan-300">Technical Invariant 4.1: Insufficiency of Uniform Error-Masking (Timing Side-Channels & Non-Malleability)</strong>
-              <p class="text-slate-300">
+            <div class="p-3 bg-zinc-950 rounded-lg border border-zinc-800 space-y-1">
+              <strong class="text-zinc-100">Technical Invariant 4.1: Insufficiency of Uniform Error-Masking (Timing Side-Channels & Non-Malleability)</strong>
+              <p class="text-zinc-400">
                 Rendering error status codes uniform fails to resolve side-channel leakage. Timing variations (e.g. the Lucky Thirteen attack, CVE-2013-0169) allow adversaries to measure CPU cycle deltas between PKCS#7 boundary checks and MAC computation. Furthermore, uniform error handling does not establish ciphertext integrity; bit-flipping malleability persists unconditionally.
               </p>
             </div>
-            <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-1">
-              <strong class="text-cyan-300">Technical Invariant 4.2: Cryptographic Immunity of Galois/Counter Mode (AES-GCM AEAD Architecture)</strong>
-              <p class="text-slate-300">
+            <div class="p-3 bg-zinc-950 rounded-lg border border-zinc-800 space-y-1">
+              <strong class="text-zinc-100">Technical Invariant 4.2: Cryptographic Immunity of Galois/Counter Mode (AES-GCM AEAD Architecture)</strong>
+              <p class="text-zinc-400">
                 AES-GCM utilizes Counter (CTR) mode with Galois Message Authentication (GMAC). CTR mode treats block ciphers as pseudorandom keystream generators, operating on arbitrary stream lengths and rendering PKCS#7 block padding mathematically obsolete. Additionally, the 128-bit authentication tag is verified over ciphertext and authenticated data prior to releasing decrypted plaintext, preventing any unauthenticated decryption oracle.
               </p>
             </div>
-            <div class="p-3 bg-slate-950 rounded-lg border border-slate-800 space-y-1">
-              <strong class="text-cyan-300">Technical Invariant 4.3: Historical Attack Precedents & Industry CVE Vulnerability Case Studies</strong>
-              <p class="text-slate-300">
+            <div class="p-3 bg-zinc-950 rounded-lg border border-zinc-800 space-y-1">
+              <strong class="text-zinc-100">Technical Invariant 4.3: Historical Attack Precedents & Industry CVE Vulnerability Case Studies</strong>
+              <p class="text-zinc-400">
                 Padding oracle vulnerabilities have compromised foundational transport protocols, including POODLE (CVE-2014-3566, SSL 3.0 downgrade), Lucky Thirteen (CVE-2013-0169, TLS CBC timing differences), Microsoft ASP.NET Forms Authentication (MS10-070), and W3C XML Encryption (CVE-2011-1096).
               </p>
             </div>
@@ -698,9 +679,9 @@
 
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-slate-800 bg-slate-950 py-4 text-center text-xs text-slate-500 font-mono">
-    OracleBreak &bull; CNS Lab Course Project &bull; Nasika Sasank (23ECB0A03) &bull; Department of ECE, NIT Warangal
+  <!-- Clean Monochromatic Footer -->
+  <footer class="border-t border-zinc-800/80 bg-[#09090b] py-4 text-center text-xs text-zinc-500 font-mono">
+    OracleBreak &bull; CNS Course Project &bull; Nasika Sasank (23ECB0A03) &bull; Department of ECE, NIT Warangal
   </footer>
 
   <!-- Application Logic JS -->
