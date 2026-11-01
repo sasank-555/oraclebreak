@@ -244,7 +244,7 @@ async function crackNextByteStep() {
   cell.classList.add('byte-probing');
 
   // Determine c_prev and c_curr
-  const iv = currentTarget.enc_data.iv;
+  const iv = (currentTarget.enc_data && (currentTarget.enc_data.iv || currentTarget.enc_data.nonce)) || "00".repeat(16);
   const ctBlocks = currentTarget.ct_blocks;
   const c_prev_hex = (stepState.currentBlockIdx === 1) ? iv : ctBlocks[stepState.currentBlockIdx - 2];
   const c_curr_hex = ctBlocks[stepState.currentBlockIdx - 1];
@@ -254,6 +254,10 @@ async function crackNextByteStep() {
   let data = null;
 
   const profile = document.getElementById('oracle-profile-select') ? document.getElementById('oracle-profile-select').value : 'vulnerable';
+
+  if (typeof clientOracle !== "undefined" && clientOracle) {
+    clientOracle.profile = profile;
+  }
 
   try {
     const res = await fetch('/api/attack/step', {
@@ -276,6 +280,9 @@ async function crackNextByteStep() {
     try {
       const cPrevBytes = ClientCryptoEngine.hexToBytes(c_prev_hex);
       const cCurrBytes = ClientCryptoEngine.hexToBytes(c_curr_hex);
+      if (!clientOracle || clientOracle.profile !== profile) {
+        clientOracle = new ClientDecryptionOracle(profile);
+      }
       const res = ClientAttacker.solveByte(clientOracle, cPrevBytes, cCurrBytes, bytePos, stepState.knownIntermediate);
       data = res;
     } catch (e) {

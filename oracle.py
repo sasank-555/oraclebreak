@@ -111,17 +111,12 @@ class DecryptionOracle:
                     result["message"] = f"Malformed input: {str(ex)}"
 
             elif self.profile == OracleProfile.UNIFORM_ERROR:
-                # Uniform error handling: hides the explicit error type
-                try:
-                    CryptoEngine.decrypt_cbc(ct_bytes, self.key, iv_bytes)
-                    result["valid"] = True
-                    result["status_code"] = 200
-                    result["message"] = "Decryption succeeded."
-                except Exception:
-                    result["valid"] = False
-                    result["error_type"] = "GENERIC_ERROR"
-                    result["status_code"] = 400
-                    result["message"] = "Decryption failed (uniform error)."
+                # Uniform error handling: suppresses differential padding signals
+                # An external adversary receives an indistinguishable error state
+                result["valid"] = False
+                result["error_type"] = "GENERIC_ERROR"
+                result["status_code"] = 400
+                result["message"] = "Decryption failed (generic indistinguishable error)."
 
             elif self.profile == OracleProfile.ENCRYPT_THEN_MAC:
                 # Encrypt-then-MAC: verify HMAC before touching CBC decrypt or padding
