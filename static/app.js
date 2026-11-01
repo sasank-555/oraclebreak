@@ -301,7 +301,8 @@ async function crackNextByteStep() {
 
     const interByteVal = parseInt(data.intermediate_byte_hex, 16);
     stepState.knownIntermediate[bytePos] = interByteVal;
-    stepState.recoveredPlaintext.unshift(data.plaintext_char);
+    const globalIdx = (stepState.currentBlockIdx - 1) * 16 + bytePos;
+    stepState.recoveredPlaintext[globalIdx] = data.plaintext_char;
 
     renderRecoveredStream();
 
@@ -374,7 +375,8 @@ async function startAutoAttack() {
     if (!isAttacking) break;
   }
 
-  const finishedAll = stepState.recoveredPlaintext.length === (numBlocks * 16);
+  const totalExpected = numBlocks * 16;
+  const finishedAll = stepState.recoveredPlaintext.filter(c => c !== undefined).length === totalExpected;
   isAttacking = false;
   document.getElementById('btn-start-auto').disabled = false;
   document.getElementById('btn-stop-auto').disabled = true;
@@ -395,11 +397,12 @@ function stopAutoAttack() {
 
 function renderRecoveredStream() {
   const stream = document.getElementById('recovered-stream');
-  if (stepState.recoveredPlaintext.length === 0) {
+  const filled = stepState.recoveredPlaintext.filter(c => c !== undefined);
+  if (filled.length === 0) {
     stream.innerHTML = '<span class="text-zinc-600 italic text-sm">Awaiting decryption...</span>';
     return;
   }
-  stream.innerText = stepState.recoveredPlaintext.join('');
+  stream.innerText = stepState.recoveredPlaintext.map(c => c !== undefined ? c : '?').join('');
 }
 
 // -------------------------------------------------------------
